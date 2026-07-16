@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tourist Studios — Architecture Film</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0E0B0A;
+      --ink-2: #161310;
+      --ink-3: #201B17;
+      --oxblood: #900008;
+      --oxblood-lift: #B11420;
+      --cream: #ECE5D6;
+      --cream-dim: #8C857A;
+      --hair: rgba(236,229,214,0.12);
+      --hair-strong: rgba(236,229,214,0.22);
+      --disp: "Big Shoulders Display", sans-serif;
+      --mono: "Space Mono", monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+    }
+
+    .sheet {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(20px,5vw,64px) clamp(16px,5vw,64px) 120px;
+    }
+
+    /* ── Masthead ──────────────────────────────── */
+    .masthead {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 24px;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--hair-strong);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand .blk {
+      background: var(--oxblood);
+      color: var(--cream);
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      padding: 4px 8px;
+    }
+    .brand .name {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .masthead .meta {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      text-align: right;
+    }
+
+    /* ── Hero ──────────────────────────────────── */
+    .hero { padding: clamp(56px,11vw,120px) 0 clamp(40px,7vw,80px); }
+    .hero h1 {
+      font-family: var(--disp);
+      font-weight: 900;
+      line-height: 0.84;
+      letter-spacing: -0.01em;
+      font-size: clamp(60px,14vw,168px);
+      text-transform: uppercase;
+    }
+    .hero h1 .ox { color: var(--oxblood-lift); }
+    .hero .lede {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 48px;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: clamp(28px,4vw,48px);
+    }
+    .hero .lede p {
+      max-width: 54ch;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--cream);
+    }
+    .hero .lede p b { color: var(--oxblood-lift); font-weight: 700; }
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+    }
+
+    /* ── Section chrome ────────────────────────── */
+    section { margin-top: clamp(56px,9vw,96px); }
+    .sec-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 28px;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .sec-head h2 {
+      font-family: var(--disp);
+      font-weight: 800;
+      font-size: clamp(28px,4vw,42px);
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .tag b {
+      background: var(--oxblood);
+      color: var(--cream);
+      font-weight: 700;
+      padding: 3px 7px;
+      letter-spacing: 0.12em;
+      line-height: 1;
+    }
+    .sec-head .note {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      text-align: right;
+    }
+
+    /* ── Video grid ────────────────────────────── */
+    .video-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding-top: 24px;
+      border-top: 1px solid var(--hair-strong);
+    }
+    .video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      background: var(--ink-3);
+    }
+    .video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: 0;
+    }
+    .video-meta {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--hair);
+    }
+    .video-meta .vtitle {
+      font-family: var(--disp);
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+    }
+    .video-meta .vclient {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--oxblood-lift);
+      margin-top: 5px;
+      font-weight: 700;
+    }
+    .video-meta .vtype {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      margin-top: 3px;
+    }
+
+    /* ── Credential strip ──────────────────────── */
+    .strip {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: clamp(36px,5vw,56px);
+      border-top: 1px solid var(--hair-strong);
+      border-bottom: 1px solid var(--hair-strong);
+    }
+    .strip-item {
+      flex: 1 1 auto;
+      padding: 18px 24px;
+      border-right: 1px solid var(--hair-strong);
+    }
+    .strip-item:last-child { border-right: 0; }
+    .strip-item .sk {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      margin-bottom: 6px;
+    }
+    .strip-item .sv {
+      font-family: var(--disp);
+      font-weight: 700;
+      font-size: 16px;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    /* ── Services ──────────────────────────────── */
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      border: 1px solid var(--hair-strong);
+    }
+    .service {
+      border-right: 1px solid var(--hair-strong);
+      padding: clamp(22px,3vw,36px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .service:last-child { border-right: 0; }
+    .snum {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--oxblood-lift);
+    }
+    .stitle {
+      font-family: var(--disp);
+      font-weight: 800;
+      font-size: clamp(22px,2.8vw,34px);
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      line-height: 0.95;
+    }
+    .sdesc {
+      font-size: 12.5px;
+      line-height: 1.65;
+      color: var(--cream-dim);
+      flex: 1;
+    }
+    .sfrom {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--oxblood-lift);
+    }
+    .sfrom small {
+      display: block;
+      font-weight: 400;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      margin-top: 4px;
+    }
+
+    /* ── Carousel ──────────────────────────────── */
+    .carousel-outer {
+      position: relative;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* Thin red progress bar runs across top of carousel */
+    .carousel-progress {
+      height: 2px;
+      background: var(--hair-strong);
+      overflow: hidden;
+    }
+    .carousel-progress-fill {
+      height: 100%;
+      background: var(--oxblood-lift);
+      width: 0%;
+    }
+
+    /* All slides stacked in the same CSS grid cell */
+    .carousel-track {
+      display: grid;
+      border: 1px solid var(--hair-strong);
+      border-top: 0;
+    }
+    .carousel-slide {
+      grid-area: 1 / 1;
+      display: grid;
+      grid-template-columns: 42% 58%;
+      min-height: clamp(380px, 44vw, 560px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.75s ease;
+    }
+    .carousel-slide.is-active {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 1;
+    }
+
+    /* Left column — text */
+    .cslide-left {
+      padding: clamp(28px, 4vw, 52px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      border-right: 1px solid var(--hair-strong);
+    }
+    .cslide-counter {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--oxblood-lift);
+    }
+    .cslide-title {
+      font-family: var(--disp);
+      font-weight: 900;
+      font-size: clamp(36px, 5.5vw, 70px);
+      text-transform: uppercase;
+      line-height: 0.87;
+      letter-spacing: -0.01em;
+      flex: 1;
+    }
+    .cslide-title .ox { color: var(--oxblood-lift); }
+    .cslide-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .cslide-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      line-height: 1.4;
+    }
+    .cslide-badge.client {
+      background: var(--oxblood);
+      color: var(--cream);
+      font-weight: 700;
+    }
+    .cslide-badge.type {
+      border: 1px solid var(--hair-strong);
+      color: var(--cream-dim);
+    }
+    .cslide-desc {
+      font-size: 12px;
+      line-height: 1.72;
+      color: var(--cream-dim);
+      max-width: 38ch;
+    }
+
+    /* Right column — editorial placeholder */
+    .cslide-right {
+      position: relative;
+      overflow: hidden;
+      background: var(--ink-2);
+    }
+    .cph-wrap {
+      position: absolute;
+      inset: 0;
+    }
+    /* Ambient gradient + scan-line texture */
+    .cph-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 18% 82%, rgba(144,0,8,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 78% 18%, rgba(236,229,214,0.025) 0%, transparent 50%),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 3px,
+          rgba(236,229,214,0.014) 3px,
+          rgba(236,229,214,0.014) 4px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* Left oxblood accent line */
+    .cph-line {
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--oxblood);
+      opacity: 0.65;
+      z-index: 2;
+    }
+    /* "In Production" badge — top right */
+    .cph-status {
+      position: absolute;
+      top: 20px; right: 20px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--oxblood);
+      padding: 4px 9px;
+      z-index: 2;
+    }
+    /* Ghost project title fills the frame */
+    .cph-title-big {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: clamp(20px, 3vw, 38px);
+      font-family: var(--disp);
+      font-weight: 900;
+      font-size: clamp(44px, 7.5vw, 108px);
+      text-transform: uppercase;
+      line-height: 0.82;
+      letter-spacing: -0.03em;
+      color: var(--cream);
+      opacity: 0.065;
+      z-index: 1;
+    }
+
+    /* ── Carousel video fills ──────────────────── */
+
+    /* All videos: cover fill via aspect-ratio + min constraints.
+       Browser finds the smallest W×H that satisfies:
+         W/H = aspect-ratio, W ≥ 100%, H ≥ 100%
+       — whichever axis is the binding constraint determines the size;
+       the other axis overflows and is clipped by overflow:hidden. */
+    .cslide-video-cover {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .cslide-video-cover iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      /* aspect-ratio set inline per video */
+      width: auto;
+      height: auto;
+      min-width: 100%;
+      min-height: 100%;
+      border: 0;
+    }
+
+    /* Status badge overlays video */
+    .cslide-right .cph-status {
+      z-index: 3;
+    }
+
+    /* Nav row */
+    .carousel-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0 0;
+    }
+    .carousel-dots {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .carousel-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--hair-strong);
+      cursor: pointer;
+      border: 0; padding: 0;
+      flex-shrink: 0;
+      transition: background 0.25s, transform 0.25s;
+    }
+    .carousel-dot.is-active {
+      background: var(--oxblood-lift);
+      transform: scale(1.55);
+    }
+    .carousel-arrows { display: flex; gap: 8px; }
+    .carousel-arrow {
+      background: transparent;
+      border: 1px solid var(--hair-strong);
+      color: var(--cream-dim);
+      font-family: var(--mono);
+      font-size: 16px;
+      width: 38px; height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+      line-height: 1;
+    }
+    .carousel-arrow:hover {
+      background: var(--oxblood);
+      border-color: var(--oxblood);
+      color: var(--cream);
+    }
+
+    /* ── CTA ───────────────────────────────────── */
+    .cta-section {
+      margin-top: clamp(64px,10vw,110px);
+      padding-top: 28px;
+      border-top: 1px solid var(--hair-strong);
+    }
+    .cta-section h2 {
+      font-family: var(--disp);
+      font-weight: 900;
+      font-size: clamp(52px,12vw,148px);
+      text-transform: uppercase;
+      line-height: 0.84;
+      letter-spacing: -0.01em;
+      margin-bottom: clamp(32px,5vw,56px);
+    }
+    .cta-section h2 .ox { color: var(--oxblood-lift); }
+    .cta-body {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px 72px;
+      align-items: flex-end;
+    }
+    .cta-copy {
+      max-width: 46ch;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--cream-dim);
+    }
+    .cta-copy b { color: var(--cream); }
+    .c-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      margin-bottom: 10px;
+    }
+    .cta-email {
+      font-family: var(--disp);
+      font-weight: 800;
+      font-size: clamp(20px,3.2vw,38px);
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      display: block;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .cta-email:hover { color: var(--oxblood-lift); }
+
+    /* ── Footer ────────────────────────────────── */
+    footer {
+      margin-top: clamp(54px,8vw,88px);
+      padding-top: 22px;
+      border-top: 1px solid var(--hair-strong);
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 22px;
+    }
+    footer .f .k {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream-dim);
+      margin-bottom: 6px;
+    }
+    footer .f .v {
+      font-size: 11.5px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+    footer .f.own .v { color: var(--oxblood-lift); }
+
+    /* ── Editable fields ───────────────────────── */
+    [contenteditable] {
+      border-radius: 2px;
+      transition: box-shadow .12s, background .12s;
+      outline: none;
+    }
+    [contenteditable]:hover { box-shadow: 0 0 0 1px var(--hair-strong); }
+    [contenteditable]:focus {
+      box-shadow: 0 0 0 1px var(--oxblood-lift);
+      background: rgba(177,20,32,0.06);
+    }
+
+    /* ── Responsive ────────────────────────────── */
+    @media (max-width: 768px) {
+      .video-grid { grid-template-columns: 1fr; }
+      .service-grid { grid-template-columns: 1fr; }
+      .service { border-right: 0; border-bottom: 1px solid var(--hair-strong); }
+      .service:last-child { border-bottom: 0; }
+      footer { grid-template-columns: repeat(2,1fr); }
+      .masthead .meta { text-align: left; }
+      .sec-head .note { text-align: left; }
+      .strip { flex-direction: column; }
+      .strip-item { border-right: 0; border-bottom: 1px solid var(--hair-strong); }
+      .strip-item:last-child { border-bottom: 0; }
+      .carousel-slide { grid-template-columns: 1fr; }
+      .cslide-left { border-right: 0; border-bottom: 1px solid var(--hair-strong); }
+      .cslide-right { min-height: 220px; }
+    }
+
+    @media print {
+      body { background: #fff; color: #111; }
+      :root {
+        --cream: #111; --cream-dim: #555;
+        --hair: #ddd; --hair-strong: #bbb;
+        --oxblood-lift: #900008;
+        --ink: #fff; --ink-2: #fff; --ink-3: #f4f4f4;
+      }
+      .hero h1 .ox, .vclient, .snum, .sfrom,
+      .cta-section h2 .ox, footer .f.own .v { color: #900008; }
+    }
+  </style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="masthead">
+    <div class="brand">
+      <span class="blk">FILM</span>
+      <span class="name">Tourist&nbsp;Studios</span>
+    </div>
+    <div class="meta">Architecture · Sydney NSW · 2026</div>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Architecture<br><span class="ox">Deserves</span><br>Film.</h1>
+    <div class="lede">
+      <p>Tourist Studios makes <b>project films, brand films and social content</b> for architecture practices. One director-DOP, broadcast-standard finish, fast and quiet on location. Based in Sydney. Built for the firms whose work should be experienced — not just photographed.</p>
+      <span class="eyebrow">TS · Architecture · 2026</span>
+    </div>
+  </div>
+
+  <!-- Section 01: Recent Work -->
+  <section>
+    <div class="sec-head">
+      <h2><span class="tag"><b>01</b></span>&nbsp; Recent Work</h2>
+      <p class="note">Woods Bagot · Sydney · 2025–26</p>
+    </div>
+    <div class="video-grid">
+
+      <div>
+        <div class="video-wrap">
+          <iframe
+            src="https://player.vimeo.com/video/1209698256?h=7973d00def&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            title="'Crows Nest Metro' by Woods Bagot">
+          </iframe>
+        </div>
+        <div class="video-meta">
+          <div class="vtitle">Crows Nest Metro</div>
+          <div class="vclient">Woods Bagot</div>
+          <div class="vtype">Project Film · Sydney NSW</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="video-wrap">
+          <iframe
+            src="https://player.vimeo.com/video/1209690925?h=5f6f09b9a9&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            title="'Blue &amp; William' by Woods Bagot">
+          </iframe>
+        </div>
+        <div class="video-meta">
+          <div class="vtitle">Blue &amp; William</div>
+          <div class="vclient">Woods Bagot</div>
+          <div class="vtype">Project Film · Sydney NSW</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Credential strip -->
+  <div class="strip">
+    <div class="strip-item">
+      <div class="sk">Client</div>
+      <div class="sv">Woods Bagot</div>
+    </div>
+    <div class="strip-item">
+      <div class="sk">Projects</div>
+      <div class="sv">Crows Nest Metro · Blue &amp; William</div>
+    </div>
+    <div class="strip-item">
+      <div class="sk">Format</div>
+      <div class="sv">Project Film</div>
+    </div>
+    <div class="strip-item">
+      <div class="sk">Location</div>
+      <div class="sv">Sydney NSW · 2025–26</div>
+    </div>
+  </div>
+
+  <!-- Section 02: What We Make -->
+  <section>
+    <div class="sec-head">
+      <h2><span class="tag"><b>02</b></span>&nbsp; What We Make</h2>
+      <p class="note">One shoot. Many uses. All cut for architecture.</p>
+    </div>
+    <div class="service-grid">
+
+      <div class="service">
+        <div class="snum">01 · Project Film</div>
+        <div class="stitle">Project<br>Film</div>
+        <div class="sdesc">The built project, captured before it fills with people. One film cut for your website, award submissions, press and social. Shot to work in motion — not just in stills. Cut into as many ratios as you need.</div>
+        <div class="sfrom">from $3,300<small>one film · cutdowns included</small></div>
+      </div>
+
+      <div class="service">
+        <div class="snum">02 · Brand Film</div>
+        <div class="stitle">Brand<br>Film</div>
+        <div class="sdesc">The studio, the principals, the philosophy. For your website hero, award submissions, and practice pitches. One capture day cut into a full suite — hero film, condensed cut, and social versions at every ratio.</div>
+        <div class="sfrom">from $5,500<small>one day · full suite</small></div>
+      </div>
+
+      <div class="service">
+        <div class="snum">03 · Social Content</div>
+        <div class="stitle">Social<br>Content</div>
+        <div class="sdesc">Monthly capture at your projects, sites or in studio. Edited into a consistent rhythm of short-form and static content. Architecture accounts with regular video see 3–5× the reach of photo-only feeds — without changing what you do.</div>
+        <div class="sfrom">from $5,500<small>per month · ongoing</small></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Section 03: In Production — Rotating Carousel -->
+  <section>
+    <div class="sec-head">
+      <h2><span class="tag"><b>03</b></span>&nbsp; In Production</h2>
+      <p class="note">Current &amp; Upcoming · 2025–26</p>
+    </div>
+
+    <div class="carousel-outer" id="carouselOuter">
+
+      <!-- Progress bar sits flush above the carousel frame -->
+      <div class="carousel-progress">
+        <div class="carousel-progress-fill" id="carouselProgress"></div>
+      </div>
+
+      <!-- Slides stacked via CSS grid-area: 1/1 -->
+      <div class="carousel-track">
+
+        <!-- 01 Parramatta Artists Studio -->
+        <div class="carousel-slide is-active" id="slide-0">
+          <div class="cslide-left">
+            <div class="cslide-counter">01 / 03</div>
+            <div class="cslide-title">Parramatta<br><span class="ox">Artists</span><br>Studio</div>
+            <div class="cslide-badges">
+              <span class="cslide-badge client">Parramatta</span>
+              <span class="cslide-badge type">Documentary · Cultural</span>
+            </div>
+            <div class="cslide-desc" contenteditable="true">Step behind the scenes into Jasmine Miikika Craciun's studio at Parramatta Artists Studios as she shares how her family's lineage of storytelling and photography has informed her new work for the Artspace Ideas Platform.</div>
+          </div>
+          <div class="cslide-right">
+            <div class="cslide-video-cover">
+              <iframe src="https://player.vimeo.com/video/1207944229?h=65ab5f8403&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="Parramatta Artists Studio &amp; Artspace present Jasmine Miikika Craciun pt01" style="aspect-ratio: 9/16"></iframe>
+            </div>
+            <div class="cph-status">Completed · 2026</div>
+          </div>
+        </div>
+
+        <!-- 02 Vogue Forces of Fashion -->
+        <div class="carousel-slide" id="slide-1">
+          <div class="cslide-left">
+            <div class="cslide-counter">02 / 03</div>
+            <div class="cslide-title">Vogue<br><span class="ox">Forces of</span><br>Fashion</div>
+            <div class="cslide-badges">
+              <span class="cslide-badge client">Vogue Australia</span>
+              <span class="cslide-badge type">Event Film · Fashion</span>
+            </div>
+            <div class="cslide-desc" contenteditable="true">Post production alongside director Ty Mclennan — on-set dailies handled during the shoot, narrative shaped remotely through the edit. From first cut to final grade.</div>
+          </div>
+          <div class="cslide-right">
+            <div class="cslide-video-cover">
+              <iframe data-src="https://player.vimeo.com/video/1207941464?h=9ff644d2d4&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="Vogue - Forces Of Fashion pt01" style="aspect-ratio: 16/9"></iframe>
+            </div>
+            <div class="cph-status">Post Production · 2026</div>
+          </div>
+        </div>
+
+        <!-- 03 Blue Illusion 'The New Look' -->
+        <div class="carousel-slide" id="slide-2">
+          <div class="cslide-left">
+            <div class="cslide-counter">03 / 03</div>
+            <div class="cslide-title">Blue Illusion<br><span class="ox">The New</span><br>Look</div>
+            <div class="cslide-badges">
+              <span class="cslide-badge client">Blue Illusion</span>
+              <span class="cslide-badge type">Brand Campaign · Retail</span>
+            </div>
+            <div class="cslide-desc" contenteditable="true">Camera assist on set and full offline/online post production for Blue Illusion's 'The New Look' — a campaign built around beautiful fabrics, considered silhouettes, and the confidence that comes from feeling truly yourself.</div>
+          </div>
+          <div class="cslide-right">
+            <div class="cslide-video-cover">
+              <iframe data-src="https://player.vimeo.com/video/1210100242?h=15f1d59f54&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;autoplay=1&amp;muted=1&amp;loop=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="BlueIllusion_TheNewLook_60S_3.0_Graded, UHD, Stereo, 24fps, 82 Leq, h264" style="aspect-ratio: 4/3"></iframe>
+            </div>
+            <div class="cph-status">Post Production · 2026</div>
+          </div>
+        </div>
+
+      </div><!-- /.carousel-track -->
+
+      <!-- Navigation row -->
+      <div class="carousel-nav">
+        <div class="carousel-dots">
+          <button class="carousel-dot is-active" onclick="carouselGoTo(0)" aria-label="Slide 1"></button>
+          <button class="carousel-dot" onclick="carouselGoTo(1)" aria-label="Slide 2"></button>
+          <button class="carousel-dot" onclick="carouselGoTo(2)" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-arrows">
+          <button class="carousel-arrow" onclick="carouselPrev()" aria-label="Previous">&#8592;</button>
+          <button class="carousel-arrow" onclick="carouselNext()" aria-label="Next">&#8594;</button>
+        </div>
+      </div>
+
+    </div><!-- /.carousel-outer -->
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Let's<br><span class="ox">Talk.</span></h2>
+    <div class="cta-body">
+      <p class="cta-copy">
+        If there's a project worth filming — <b>completed, handed over, or mid-construction</b> — fifteen minutes is enough to see whether there's something worth making together. No brief required upfront.
+      </p>
+      <div>
+        <div class="c-label">Get in touch</div>
+        <a class="cta-email" href="mailto:online@touriststudios.com.au" contenteditable="true">online@touriststudios.com.au</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="f"><div class="k">Studio</div><div class="v">Tourist Studios</div></div>
+    <div class="f"><div class="k">ABN</div><div class="v">18 256 972 168</div></div>
+    <div class="f"><div class="k">Base</div><div class="v">Sydney NSW</div></div>
+    <div class="f own"><div class="k">Specialty</div><div class="v">Architecture<br>Film</div></div>
+  </footer>
+
+</div><!-- /.sheet -->
+
+<!-- Vimeo Player API — loaded once for both embeds -->
+<script src="https://player.vimeo.com/api/player.js"></script>
+
+<!-- Carousel engine -->
+<script>
+(function () {
+  var slides = document.querySelectorAll('.carousel-slide');
+  var dots   = document.querySelectorAll('.carousel-dot');
+  var fill   = document.getElementById('carouselProgress');
+  var outer  = document.getElementById('carouselOuter');
+  var current  = 0;
+  var timer    = null;
+  var INTERVAL = 6000; // ms between auto-advances
+
+  function showSlide(index) {
+    slides[current].classList.remove('is-active');
+    dots[current].classList.remove('is-active');
+    current = ((index % slides.length) + slides.length) % slides.length;
+    slides[current].classList.add('is-active');
+    dots[current].classList.add('is-active');
+    // Lazy-load iframe when slide first activates (src set via data-src)
+    var lazyIframe = slides[current].querySelector('iframe[data-src]');
+    if (lazyIframe) {
+      lazyIframe.src = lazyIframe.getAttribute('data-src');
+      lazyIframe.removeAttribute('data-src');
+    }
+    resetProgress();
+  }
+
+  function resetProgress() {
+    if (!fill) return;
+    fill.style.transition = 'none';
+    fill.style.width = '0%';
+    fill.offsetWidth; // force reflow so CSS transition re-fires
+    fill.style.transition = 'width ' + INTERVAL + 'ms linear';
+    fill.style.width = '100%';
+  }
+
+  function startAuto() {
+    clearInterval(timer);
+    timer = setInterval(function () { showSlide(current + 1); }, INTERVAL);
+  }
+
+  // Pause on hover
+  outer.addEventListener('mouseenter', function () { clearInterval(timer); });
+  outer.addEventListener('mouseleave', function () { startAuto(); resetProgress(); });
+
+  // Pause while editing a slide description
+  var editables = outer.querySelectorAll('[contenteditable]');
+  editables.forEach(function (el) {
+    el.addEventListener('focus', function () { clearInterval(timer); });
+    el.addEventListener('blur',  function () { startAuto(); resetProgress(); });
+  });
+
+  // Touch swipe (threshold: 40px)
+  var touchStartX = 0;
+  outer.addEventListener('touchstart', function (e) {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  outer.addEventListener('touchend', function (e) {
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) {
+      showSlide(dx < 0 ? current + 1 : current - 1);
+      startAuto();
+    }
+  });
+
+  // Keyboard — ← →
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { showSlide(current + 1); startAuto(); }
+    if (e.key === 'ArrowLeft')  { showSlide(current - 1); startAuto(); }
+  });
+
+  // Public API used by onclick handlers
+  window.carouselNext  = function () { showSlide(current + 1); startAuto(); };
+  window.carouselPrev  = function () { showSlide(current - 1); startAuto(); };
+  window.carouselGoTo  = function (i) { showSlide(i); startAuto(); };
+
+  // Kick off
+  resetProgress();
+  startAuto();
+})();
+</script>
+</body>
+</html>
