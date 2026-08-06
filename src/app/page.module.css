@@ -1,0 +1,220 @@
+.page {
+  min-height: 100vh;
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* ── Hero ── */
+.hero {
+  padding: 180px 40px 100px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.heroMeta {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.heroTag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  padding: 6px 12px;
+  border: 1px solid var(--rule);
+}
+
+.heroHeadline {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 10vw, 140px);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  color: var(--crimson);
+}
+
+.heroSub {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--mid);
+  max-width: 420px;
+}
+
+/* ── Ledger ── */
+.ledger {
+  border-top: 1px solid var(--rule);
+  margin: 0 40px;
+}
+
+.ledgerHeader {
+  display: grid;
+  grid-template-columns: 60px 1fr 200px 220px 80px;
+  gap: 0;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ledgerCol {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+
+.ledgerColRight {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  text-align: right;
+}
+
+.ledgerRow {
+  display: grid;
+  grid-template-columns: 60px 1fr 200px 220px 80px;
+  gap: 0;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: center;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.ledgerRow:hover {
+  background: rgba(128,0,32,0.06);
+}
+
+.ledgerRow:hover .ledgerArrow {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+.ledgerNum {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--mid);
+  letter-spacing: 0.06em;
+}
+
+.ledgerTitle {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ledgerArrow {
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+
+.ledgerClient {
+  font-size: 13px;
+  color: var(--mid);
+}
+
+.ledgerCats {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cat {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid var(--rule);
+  color: var(--mid);
+}
+
+.ledgerYear {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mid);
+  text-align: right;
+}
+
+.ledgerFooter {
+  padding: 24px 0;
+}
+
+.viewAll {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--mid);
+  transition: color 0.2s;
+}
+.viewAll:hover { color: var(--crimson); }
+
+/* ── Services ── */
+.services {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin: 80px 0 0;
+  overflow: hidden;
+}
+
+.serviceItem {
+  flex: 1;
+  padding: 20px 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  border-right: 1px solid var(--rule);
+  transition: color 0.2s, background 0.2s;
+}
+.serviceItem:last-child { border-right: none; }
+.serviceItem:hover { color: var(--crimson); background: rgba(128,0,32,0.04); }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .ledgerHeader,
+  .ledgerRow {
+    grid-template-columns: 50px 1fr 160px 80px;
+  }
+  .ledgerCats { display: none; }
+}
+
+@media (max-width: 768px) {
+  .hero { padding: 120px 20px 60px; }
+  .ledger { margin: 0 20px; }
+
+  .ledgerHeader,
+  .ledgerRow {
+    grid-template-columns: 44px 1fr 60px;
+  }
+  .ledgerClient { display: none; }
+  .ledgerCats { display: none; }
+
+  .services {
+    flex-direction: column;
+  }
+  .serviceItem {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+    padding: 14px 20px;
+  }
+  .serviceItem:last-child { border-bottom: none; }
+}

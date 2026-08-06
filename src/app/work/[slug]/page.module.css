@@ -1,0 +1,150 @@
+.page {
+  background: var(--cream);
+  color: var(--crimson);
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.header {
+  padding: 60px 40px 40px;
+  border-bottom: 1px solid var(--rule-dark);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.projectNum {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  opacity: 0.3;
+}
+
+.cats {
+  display: flex;
+  gap: 6px;
+}
+
+.cat {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid rgba(62,3,6,0.2);
+  opacity: 0.6;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 7vw, 96px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  margin-bottom: 40px;
+}
+
+.headerDetails {
+  display: flex;
+  gap: 60px;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detailLabel {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.35;
+}
+
+.detail span:last-child {
+  font-size: 14px;
+}
+
+/* Hero */
+.hero {
+  width: 100%;
+  background: rgba(62,3,6,0.05);
+}
+
+.videoWrap {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.heroImg {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+.heroPlaceholder {
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.heroPlaceholder span {
+  font-family: var(--font-display);
+  font-size: clamp(80px, 20vw, 200px);
+  font-weight: 900;
+  opacity: 0.06;
+}
+
+/* Body */
+.body {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+
+.description {
+  font-size: 18px;
+  line-height: 1.75;
+  opacity: 0.75;
+}
+
+/* Gallery */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  background: rgba(62,3,6,0.1);
+  margin: 0 40px 80px;
+}
+
+.galleryImg {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: rgba(62,3,6,0.05);
+}
+
+@media (max-width: 768px) {
+  .header { padding: 40px 20px 32px; }
+  .headerDetails { flex-direction: column; gap: 24px; }
+  .body { padding: 48px 20px; }
+  .gallery { margin: 0 0 60px; grid-template-columns: 1fr; }
+}

@@ -1,0 +1,131 @@
+.page {
+  background: var(--cream);
+  color: var(--crimson);
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 60px 40px 40px;
+  border-bottom: 1px solid var(--rule-dark);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  opacity: 0.4;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--rule-dark);
+  border-top: 1px solid var(--rule-dark);
+}
+
+.card {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  transition: background 0.2s;
+}
+.card:hover { background: #E5DCC9; }
+
+.thumb {
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  position: relative;
+  background: rgba(128,0,32,0.06);
+}
+
+.thumbPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.thumbPlaceholder span {
+  font-family: var(--font-display);
+  font-size: 80px;
+  font-weight: 900;
+  opacity: 0.08;
+  color: var(--crimson);
+}
+
+.cardMeta {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--rule-dark);
+}
+
+.cardNum {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--crimson);
+  opacity: 0.3;
+  padding-top: 3px;
+  flex-shrink: 0;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.cardSub {
+  font-size: 12px;
+  opacity: 0.5;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+}
+
+.cardCats {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.cat {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid rgba(128,0,32,0.2);
+  color: var(--crimson);
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .header { padding: 40px 20px 24px; }
+  .grid { grid-template-columns: 1fr; }
+  .cardMeta { padding: 16px 20px; }
+}

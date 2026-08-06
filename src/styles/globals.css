@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@400;500&display=swap');
+
+:root {
+  --ink:       #0E0C0A;
+  --cream:     #ECE5D6;
+  --crimson:   #800020;
+  --mid:       #6B6560;
+  --rule:      rgba(236,229,214,0.12);
+  --rule-dark: rgba(14,12,10,0.12);
+
+  --font-display: 'Big Shoulders Display', sans-serif;
+  --font-body:    'Geist', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-hand:    'Caveat', cursive;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--ink);
+  color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; cursor: pointer; }
+
+img, video { max-width: 100%; display: block; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--mid); }
+
+/* Selection */
+::selection { background: var(--cream); color: var(--ink); }

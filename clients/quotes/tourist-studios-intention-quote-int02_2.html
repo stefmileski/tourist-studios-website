@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tourist Studios — Quote · Intention Studios Content Creation Project (INT-02)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E0B0A;--ink-2:#161310;--ink-3:#201B17;
+    --oxblood:#900008;--oxblood-lift:#B11420;
+    --cream:#ECE5D6;--cream-dim:#8C857A;
+    --hair:rgba(236,229,214,0.12);--hair-strong:rgba(236,229,214,0.22);
+    --disp:"Big Shoulders Display",sans-serif;--mono:"Space Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:var(--ink);color:var(--cream);font-family:var(--mono);font-size:14px;line-height:1.5;letter-spacing:0.01em;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .page{background:var(--ink);padding:clamp(20px,5vw,72px) clamp(16px,5vw,72px) 120px}
+  .sheet{max-width:920px;margin:0 auto}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--cream-dim)}
+  .tag{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--cream)}
+  .tag b{background:var(--oxblood);color:var(--cream);font-weight:700;padding:3px 7px;letter-spacing:0.12em;line-height:1}
+  .masthead{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:baseline;justify-content:space-between;padding-bottom:18px;border-bottom:1px solid var(--hair-strong)}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .blk{background:var(--oxblood);color:var(--cream);font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:0.14em;padding:4px 8px}
+  .brand .name{font-family:var(--mono);font-size:12px;letter-spacing:0.2em;text-transform:uppercase}
+  .masthead .meta{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--cream-dim);text-align:right}
+  .hero{padding:clamp(40px,9vw,88px) 0 clamp(30px,5vw,52px)}
+  .hero h1{font-family:var(--disp);font-weight:900;line-height:0.86;letter-spacing:-0.01em;font-size:clamp(50px,11vw,124px);text-transform:uppercase}
+  .hero h1 .ox{color:var(--oxblood-lift)}
+  .hero .lede{display:flex;flex-wrap:wrap;gap:18px 40px;justify-content:space-between;align-items:flex-end;margin-top:clamp(26px,4vw,40px)}
+  .hero .lede p{max-width:52ch;font-size:13px;line-height:1.6;color:var(--cream)}
+  .hero .lede p b{color:var(--oxblood-lift);font-weight:700}
+  section{margin-top:clamp(44px,7vw,72px)}
+  .sec-head{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline;justify-content:space-between;margin-bottom:20px}
+  .sec-head h2{font-family:var(--disp);font-weight:800;font-size:clamp(26px,4vw,40px);letter-spacing:0.01em;text-transform:uppercase;line-height:1}
+  .sec-head .note{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-dim);max-width:42ch;text-align:right}
+  .rows{border-top:1px solid var(--hair-strong)}
+  .grp{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--oxblood-lift);padding:20px 0 9px}
+  .row{display:grid;grid-template-columns:1fr auto;gap:4px 24px;padding:14px 0;border-top:1px solid var(--hair);align-items:baseline}
+  .row .d{display:flex;flex-direction:column;gap:3px}
+  .row .label{font-family:var(--disp);font-weight:700;font-size:18px;letter-spacing:0.01em;line-height:1.1;text-transform:uppercase}
+  .row .label .rec{display:inline-block;vertical-align:middle;margin-left:10px;background:var(--oxblood);color:var(--cream);font-family:var(--mono);font-weight:700;font-size:9px;letter-spacing:0.16em;padding:3px 7px;text-transform:uppercase;transform:translateY(-2px)}
+  .row .sub{font-size:11.5px;color:var(--cream-dim);letter-spacing:0.02em;max-width:64ch}
+  .row .rate{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--oxblood-lift);white-space:nowrap;text-align:right}
+  .row .rate small{display:block;font-weight:400;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--cream-dim);margin-top:3px}
+  .row .rate.incl{color:var(--cream)}
+  .total{display:grid;grid-template-columns:1fr auto;gap:4px 24px;align-items:baseline;margin-top:6px;padding:20px 0 4px;border-top:1px solid var(--hair-strong)}
+  .total .label{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:0.01em;text-transform:uppercase}
+  .total .sub{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-dim);margin-top:4px}
+  .total .amt{font-family:var(--disp);font-weight:900;font-size:clamp(34px,6vw,52px);line-height:0.9;color:var(--oxblood-lift);white-space:nowrap;text-align:right}
+  .total .amt small{display:block;font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--cream-dim);margin-top:6px}
+  .terms{border-top:1px solid var(--hair-strong)}
+  .term{display:grid;grid-template-columns:200px 1fr;gap:6px 28px;padding:14px 0;border-top:1px solid var(--hair)}
+  .term:first-child{border-top:0}
+  .term dt{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--cream)}
+  .term dd{font-size:13px;line-height:1.55;color:var(--cream)}
+  .term dd .flag{color:var(--oxblood-lift)}
+  footer{margin-top:clamp(50px,8vw,84px);padding-top:22px;border-top:1px solid var(--hair-strong);display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  footer .f .k{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:6px}
+  footer .f .v{font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase;line-height:1.4}
+  footer .f.own .v{color:var(--oxblood-lift)}
+  .fineprint{margin-top:26px;font-size:10.5px;letter-spacing:0.06em;color:var(--cream-dim);line-height:1.6}
+  [contenteditable]{border-radius:2px;transition:box-shadow .12s,background .12s;outline:none}
+  [contenteditable]:hover{box-shadow:0 0 0 1px var(--hair-strong)}
+  [contenteditable]:focus{box-shadow:0 0 0 1px var(--oxblood-lift);background:rgba(177,20,32,0.06)}
+  .toolbar{position:fixed;right:18px;bottom:18px;z-index:999;display:flex;gap:8px;align-items:center;background:var(--ink-2);border:1px solid var(--hair-strong);padding:8px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+  .toolbar .hint{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--cream-dim);padding:0 6px;max-width:160px;line-height:1.3}
+  .toolbar button{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream);background:var(--ink-3);border:1px solid var(--hair-strong);padding:9px 12px;cursor:pointer;transition:background .12s,color .12s}
+  .toolbar button:hover{background:var(--oxblood);border-color:var(--oxblood)}
+  .toolbar button.primary{background:var(--oxblood);border-color:var(--oxblood)}
+  .toolbar button.primary:hover{background:var(--oxblood-lift);border-color:var(--oxblood-lift)}
+  @media (max-width:600px){
+    .term{grid-template-columns:1fr;gap:4px}
+    footer{grid-template-columns:repeat(2,1fr)}
+    .masthead .meta,.sec-head .note{text-align:left}
+    .hero .lede{flex-direction:column;align-items:flex-start}
+    .toolbar{left:12px;right:12px;bottom:12px;justify-content:center}
+    .toolbar .hint{display:none}
+  }
+  @page{margin:0}
+  @media print{
+    html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .page{padding:48px 56px}
+    .toolbar{display:none!important}
+    [contenteditable]:hover,[contenteditable]:focus{box-shadow:none;background:none}
+    section,.term,.row{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<div class="sheet">
+
+  <header class="masthead">
+    <div class="brand">
+      <span class="blk" contenteditable="true">QUOTE</span>
+      <span class="name" contenteditable="true">Tourist&nbsp;Studios</span>
+    </div>
+    <div class="meta" contenteditable="true">
+      Intention Studios · Content Creation Project<br>
+      Per SOW · AUD ex GST · Valid 30 days · Jul 2026
+    </div>
+  </header>
+
+  <div class="hero">
+    <h1><span contenteditable="true">Content series.</span><br><span class="ox" contenteditable="true">Set up to run.</span></h1>
+    <div class="lede">
+      <p contenteditable="true">Costings against the Intention Studios Content Creation SOW: three founder setup sessions, the trio shoot with unified B-roll, fourteen edited deliverables, and the editing template &amp; handover package for your ongoing editor.<br><b>Priced line-for-line to your scope document.</b></p>
+      <span class="eyebrow" contenteditable="true">TS / Q / INT-02</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head">
+      <h2><span class="tag" style="vertical-align:middle"><b>01</b></span>&nbsp; <span contenteditable="true">Investment</span></h2>
+      <p class="note" contenteditable="true">Mapped to the SOW sections. Fourteen deliverables per the content structure table.</p>
+    </div>
+    <div class="rows">
+      <div class="grp" contenteditable="true">Equipment</div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Equipment Spec &amp; Purchase List</span><span class="sub" contenteditable="true">Full spec for the founder-supplied equipment — camera, lighting (moody indoor look per moodboard), audio and support per founder desk, plus the outdoor/mobile kits · two budget tiers, ready to order · you purchase direct, no margin taken</span></div><span class="rate"><span contenteditable="true">$2,500</span><small contenteditable="true">fixed</small></span></div>
+
+      <div class="grp" contenteditable="true">Consultation &amp; Setup</div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Founder Setup Sessions × 2 — Sydney</span><span class="sub" contenteditable="true">Half-day per founder at their home desk: install &amp; calibration, camera framing and settings, lighting to the moodboard reference, mic placement and levels, both styles covered · includes the self-filming checklist &amp; reference guide per founder</span></div><span class="rate"><span contenteditable="true">$2,800</span><small contenteditable="true">2 × $1,400 half day</small></span></div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Melbourne Session — On Site<span class="rec">Recommended</span></span><span class="sub" contenteditable="true">Same session, delivered in person — billed as a full day to cover travel time, plus travel expenses at cost +10% (est. $500, flights + transfers, day trip) · recommended: the interstate seat carries the highest consistency risk, and in-person calibration is what removes it</span></div><span class="rate"><span contenteditable="true">$2,500 + est. $500</span><small contenteditable="true">day + travel at cost +10%</small></span></div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Melbourne Session — Remote Alternative</span><span class="sub" contenteditable="true">Kit bench-configured in Sydney — settings saved, framing marks pre-set — couriered down, session run via video call · courier at cost +10% (est. $200)</span></div><span class="rate incl"><span contenteditable="true">$1,400 + est. $200</span><small contenteditable="true">alternative · session + courier</small></span></div>
+
+      <div class="grp" contenteditable="true">Production — Trio Video &amp; Unified B-Roll</div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Trio Shoot Day</span><span class="sub" contenteditable="true">Full day — the trio video in the podcast-style room plus unified B-roll across the office and surrounds · shot by Tourist Studios on own kit · B-roll scope covers this shoot day; footage from founder self-shoots is edited as supplied</span></div><span class="rate"><span contenteditable="true">$3,200</span><small contenteditable="true">day incl. kit</small></span></div>
+
+      <div class="grp" contenteditable="true">Post-Production — Editing Scope, 14 Deliverables</div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Long-Form Indoor Edits × 3</span><span class="sub" contenteditable="true">Dan, Tegan, Cez — Deep Dive Learning, from self-filmed footage</span></div><span class="rate incl" contenteditable="true">1.5–3 min<br><small>16:9 masters</small></span></div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Short-Form Outdoor Edits × 3</span><span class="sub" contenteditable="true">Dan, Tegan, Cez — Thought Leadership, from self-filmed footage</span></div><span class="rate incl" contenteditable="true">Short-form<br><small>9:16 native</small></span></div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Long-Form Trio Edits × 3</span><span class="sub" contenteditable="true">From the trio shoot, filmed by Tourist Studios</span></div><span class="rate incl" contenteditable="true">1.5–3 min<br><small>16:9 + 9:16 cutdowns</small></span></div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Additional Social Shorts × 5</span><span class="sub" contenteditable="true">Cut down from the footage above · vertical, social-ready</span></div><span class="rate"><span contenteditable="true">$8,000</span><small contenteditable="true">14 deliverables · full set</small></span></div>
+
+      <div class="grp" contenteditable="true">Template &amp; Handover</div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Editing Template &amp; Handover Package</span><span class="sub" contenteditable="true">All 14 project files organised for reuse · colour presets/LUT package · caption style, pacing and brand element documentation · export &amp; delivery specs per format · handover call with your ongoing editor, incl. prep</span></div><span class="rate"><span contenteditable="true">$4,500</span><small contenteditable="true">fixed fee</small></span></div>
+    </div>
+
+    <div class="total">
+      <div class="d"><span class="label" contenteditable="true">Total</span><div class="sub" contenteditable="true">With Melbourne on site (recommended) · $22,600 with remote alternative · ex GST · travel &amp; courier reconciled at cost +10%</div></div>
+      <span class="amt"><span contenteditable="true">$24,000</span><small contenteditable="true">AUD ex GST</small></span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2><span class="tag" style="vertical-align:middle"><b>02</b></span>&nbsp; <span contenteditable="true">Timing</span></h2>
+      <p class="note" contenteditable="true">Timeline — commencing August 2026.</p>
+    </div>
+    <div class="rows">
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Setup Sessions</span><span class="sub" contenteditable="true">Three half-day sessions scheduled across founder availability, early–mid August · equipment ordered from the spec beforehand so every session installs, not unboxes</span></div><span class="rate incl" contenteditable="true">August · WC TBC</span></div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Trio Shoot</span><span class="sub" contenteditable="true">Scheduled around all three founders in Sydney · podcast room booked by Intention Studios</span></div><span class="rate incl" contenteditable="true">August · date TBC</span></div>
+      <div class="row"><div class="d"><span class="label" contenteditable="true">Edit Delivery</span><span class="sub" contenteditable="true">Trio edits from shoot + ~1 week · founder-filmed edits within ~2 weeks of usable footage received per batch · full set + handover package target 4–5 weeks from final footage in</span></div><span class="rate incl" contenteditable="true">Rolling</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2><span class="tag" style="vertical-align:middle"><b>03</b></span>&nbsp; <span contenteditable="true">Terms</span></h2>
+      <p class="note" contenteditable="true">Confirmed in writing before work begins.</p>
+    </div>
+    <dl class="terms">
+      <div class="term"><dt contenteditable="true">Payment</dt><dd contenteditable="true">50% deposit to confirm and schedule sessions; balance on delivery of the full deliverable set and handover package.</dd></div>
+      <div class="term"><dt contenteditable="true">Deliverable Count</dt><dd contenteditable="true">Editing scope is the 14 deliverables itemised above, per the SOW content structure table. Additional pieces quoted at $250 per social cutdown or the editor day rate ($1,200/day) for long-form.</dd></div>
+      <div class="term"><dt contenteditable="true">Footage Quality</dt><dd contenteditable="true">Founder-filmed edits are quoted against usable footage shot to the calibrated setups. <span class="flag">Rescue work beyond reasonable correction, or re-edits from re-shot footage, billed at the editor day rate.</span> The setup sessions and checklists exist to make this clause boring.</dd></div>
+      <div class="term"><dt contenteditable="true">Revisions</dt><dd contenteditable="true">Two rounds of changes included across the deliverable set. Further rounds billed at the editor day rate ($1,200/day).</dd></div>
+      <div class="term"><dt contenteditable="true">Templates &amp; IP</dt><dd contenteditable="true">Project files, LUTs and documentation licensed to Intention Studios on final payment, for use on Intention Studios content by Intention Studios and its engaged editors. <span class="flag">Not for resale or use outside Intention Studios content.</span></dd></div>
+      <div class="term"><dt contenteditable="true">Equipment</dt><dd contenteditable="true">Founder equipment purchased directly by Intention Studios from the spec — no margin taken. Tourist Studios kit covers the trio shoot day.</dd></div>
+      <div class="term"><dt contenteditable="true">Expenses</dt><dd contenteditable="true">Melbourne travel or courier, and any other third-party costs, passed through at cost +10% handling.</dd></div>
+      <div class="term"><dt contenteditable="true">Currency / GST</dt><dd contenteditable="true">All figures AUD, exclusive of GST. <span class="flag">10% GST added on invoice.</span></dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    <div class="f"><div class="k" contenteditable="true">Entity</div><div class="v" contenteditable="true">Tourist Studios</div></div>
+    <div class="f"><div class="k" contenteditable="true">ABN</div><div class="v" contenteditable="true">18 256 972 168</div></div>
+    <div class="f"><div class="k" contenteditable="true">Base</div><div class="v" contenteditable="true">Sydney NSW</div></div>
+    <div class="f own"><div class="k" contenteditable="true">Status</div><div class="v" contenteditable="true">Quote · Valid 30 days</div></div>
+  </footer>
+
+  <p class="fineprint" contenteditable="true">Quote prepared for Intention Studios, July 2026, against the "Intention Studios Content Creation Project — Overview &amp; Scope" document as supplied. The SOW references both 12 and 14 deliverables; this quote prices the 14 itemised in the content structure and editing tables. Equipment purchase costs sit with Intention Studios directly and are excluded. Podcast room access arranged by Intention Studios. This document is a quote, not a binding offer, and is valid for 30 days from issue.</p>
+
+</div>
+</div>
+
+<div class="toolbar" id="toolbar">
+  <span class="hint">Click any text to edit. Save to keep your changes.</span>
+  <button onclick="window.print()">Print / PDF</button>
+  <button class="primary" onclick="saveCopy()">Save edited copy</button>
+</div>
+
+<script>
+  function saveCopy(){
+    var clone = document.documentElement.cloneNode(true);
+    var ctb = clone.querySelector('#toolbar'); if(ctb) ctb.remove();
+    var html = '<!DOCTYPE html>\n' + clone.outerHTML;
+    var blob = new Blob([html], {type:'text/html'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'tourist-studios-intention-quote-int02.html';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 200);
+  }
+</script>
+</body>
+</html>
