@@ -134,3 +134,4 @@ tourist-studios/
 ├── sanity.config.ts          ← CMS configuration
 └── .env.local.example        ← Environment variable template
 ```
+# Password protection enabled
