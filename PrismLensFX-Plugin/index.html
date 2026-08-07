@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prism Lens FX</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <header>
+    <div class="logo">
+      <div class="logo-prism">&#9651;</div>
+      <div class="logo-text">
+        <h1>Prism Lens FX</h1>
+        <p>for Premiere Pro &middot; Tourist Studios</p>
+      </div>
+    </div>
+    <div class="intensity-bar">
+      <span class="intensity-label">Intensity</span>
+      <input type="range" id="intensity" min="1" max="3" step="1" value="2"/>
+      <span class="intensity-value" id="intensityLabel">Medium</span>
+    </div>
+  </header>
+
+  <!-- ── Tabs ────────────────────────────────────────────────────────────── -->
+  <div class="tabs">
+    <div class="tab active" data-tab="soft">Soft &amp; Dream</div>
+    <div class="tab" data-tab="light">Light &amp; Flare</div>
+    <div class="tab" data-tab="prism">Prism</div>
+    <div class="tab" data-tab="lens">Lens Optics</div>
+    <div class="tab" data-tab="about">About</div>
+  </div>
+
+  <!-- ── Content ─────────────────────────────────────────────────────────── -->
+  <div class="content">
+
+    <!-- SOFT & DREAM -->
+    <div class="section active" id="tab-soft">
+      <div class="section-title">Diffusion Effects</div>
+      <div class="effects-grid">
+
+        <div class="fx-btn" data-cat="soft" data-effect="dream">
+          <div class="icon">&#x2601;</div>
+          <span class="name">Dream FX</span>
+          <span class="desc">Soft glow &amp; warm lift</span>
+        </div>
+
+        <div class="fx-btn" data-cat="soft" data-effect="cinesoft">
+          <div class="icon">&#x1F39E;</div>
+          <span class="name">Cine Soft FX</span>
+          <span class="desc">Cinematic diffusion</span>
+        </div>
+
+        <div class="fx-btn" data-cat="soft" data-effect="nostalgia">
+          <div class="icon">&#x1F4FD;</div>
+          <span class="name">Nostalgia FX</span>
+          <span class="desc">Faded vintage film</span>
+        </div>
+
+        <div class="fx-btn" data-cat="color" data-effect="rose">
+          <div class="icon">&#x1F339;</div>
+          <span class="name">Rose FX</span>
+          <span class="desc">Warm pink diffusion</span>
+        </div>
+
+        <div class="fx-btn" data-cat="color" data-effect="moody">
+          <div class="icon">&#x1F30C;</div>
+          <span class="name">Moody FX</span>
+          <span class="desc">Dark atmospheric grade</span>
+        </div>
+
+        <div class="fx-btn" data-cat="soft" data-effect="ghost">
+          <div class="icon">&#x1F47B;</div>
+          <span class="name">Ghost FX</span>
+          <span class="desc">Spectral blur &amp; lift</span>
+        </div>
+
+      </div>
+
+      <div class="section-title">Vignette &amp; Masking</div>
+      <div class="effects-grid">
+
+        <div class="fx-btn" data-cat="lens" data-effect="vignette">
+          <div class="icon">&#x25CB;</div>
+          <span class="name">Vignette FX</span>
+          <span class="desc">Dark border falloff</span>
+        </div>
+
+        <div class="fx-btn" data-cat="lens" data-effect="pinhole">
+          <div class="icon">&#x26AB;</div>
+          <span class="name">Pinhole FX</span>
+          <span class="desc">High contrast vignette</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LIGHT & FLARE -->
+    <div class="section" id="tab-light">
+      <div class="section-title">Flare Effects</div>
+      <div class="effects-grid">
+
+        <div class="fx-btn" data-cat="light" data-effect="flare">
+          <div class="icon">&#x2728;</div>
+          <span class="name">Flare FX</span>
+          <span class="desc">35mm lens flare</span>
+        </div>
+
+        <div class="fx-btn" data-cat="light" data-effect="solarflare">
+          <div class="icon">&#x2600;</div>
+          <span class="name">Solar Flare</span>
+          <span class="desc">Intense sun flare</span>
+        </div>
+
+        <div class="fx-btn" data-cat="light" data-effect="chromaticflare">
+          <div class="icon">&#x1F308;</div>
+          <span class="name">Chromatic Flare</span>
+          <span class="desc">RGB split flare</span>
+        </div>
+
+        <div class="fx-btn" data-cat="light" data-effect="starburst">
+          <div class="icon">&#x2605;</div>
+          <span class="name">Starburst FX</span>
+          <span class="desc">Radiating star diffraction</span>
+        </div>
+
+      </div>
+
+      <div class="section-title">Glow &amp; Bloom</div>
+      <div class="effects-grid">
+
+        <div class="fx-btn" data-cat="light" data-effect="halo">
+          <div class="icon">&#x1F4A1;</div>
+          <span class="name">Halo FX</span>
+          <span class="desc">Light halo around subjects</span>
+        </div>
+
+        <div class="fx-btn" data-cat="light" data-effect="radiant">
+          <div class="icon">&#x1F31F;</div>
+          <span class="name">Radiant FX</span>
+          <span class="desc">Luminous glow bloom</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PRISM -->
+    <div class="section" id="tab-prism">
+      <div class="section-title">Prismatic Effects</div>
+      <div class="effects-grid">
+
+        <div class="fx-btn" data-cat="prism" data-effect="prism">
+          <div class="icon">&#9651;</div>
+          <span class="name">Linear Prism FX</span>
+          <span class="desc">RGB channel separation</span>
+        </div>
+
+        <div class="fx-btn" data-cat="prism" data-effect="chromaticflare">
+          <div class="icon">&#x1F300;</div>
+          <span class="name">Chromatic Aberration</span>
+          <span class="desc">Lens colour fringing</span>
+        </div>
+
+        <div class="fx-btn" data-cat="prism" data-effect="crystal">
+          <div class="icon">&#x1F48E;</div>
+          <span class="name">Crystal FX</span>
+          <span class="desc">Sharp refracted prism</span>
+        </div>
+
+        <div class="fx-btn" data-cat="distort" data-effect="kaleidoscope">
+          <div class="icon">&#x2B21;</div>
+          <span class="name">Kaleidoscope FX</span>
+          <span class="desc">Mirrored symmetry</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LENS OPTICS -->
+    <div class="section" id="tab-lens">
+      <div class="section-title">Lens Simulation</div>
+      <div class="effects-grid">
+
+        <div class="fx-btn" data-cat="lens" data-effect="splitdiopter">
+          <div class="icon">&#x25B3;</div>
+          <span class="name">Split Diopter</span>
+          <span class="desc">Dual-focus split frame</span>
+        </div>
+
+        <div class="fx-btn" data-cat="distort" data-effect="ripple">
+          <div class="icon">&#x1F30A;</div>
+          <span class="name">Ripple FX</span>
+          <span class="desc">Water surface distortion</span>
+        </div>
+
+        <div class="fx-btn" data-cat="soft" data-effect="dream">
+          <div class="icon">&#x1F4AB;</div>
+          <span class="name">Lucid Dream FX</span>
+          <span class="desc">Enhanced dream (strong)</span>
+        </div>
+
+        <div class="fx-btn" data-cat="lens" data-effect="pinhole">
+          <div class="icon">&#x1F50D;</div>
+          <span class="name">Macro FX</span>
+          <span class="desc">Close-up vignette</span>
+        </div>
+
+      </div>
+
+      <div class="section-title">Remove Effects</div>
+      <button class="remove-btn" id="removeBtn">&#x2715; Remove All Prism FX from Selected Clips</button>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="section" id="tab-about">
+      <div class="about-card">
+        <h2>Prism Lens FX <span class="badge">v1.0</span></h2>
+        <p>A Premiere Pro panel that simulates the optical characteristics of Prism Lens FX physical filters using combinations of Premiere Pro's native video effects.</p>
+        <div class="tip">
+          <strong>How to use:</strong> Select one or more clips in the timeline, choose an intensity, then click any effect button. The effect is applied immediately via native Premiere Pro effects — tweak parameters in the Effect Controls panel.
+        </div>
+      </div>
+      <div class="about-card">
+        <h2>Effect Notes</h2>
+        <p><strong>Starburst / Flare</strong> — After applying, reposition the flare centre in Effect Controls &rarr; Lens Flare to match your practical light source.</p>
+        <p style="margin-top:8px"><strong>Split Diopter</strong> — After applying, add a linear mask to the Gaussian Blur effect (Effect Controls &rarr; Gaussian Blur &rarr; Mask) to limit blur to one half of the frame.</p>
+        <p style="margin-top:8px"><strong>Kaleidoscope</strong> — Adjust the Mirror Reflection Centre points in Effect Controls to control the symmetry axis.</p>
+      </div>
+      <div class="about-card">
+        <h2>Diagnostics</h2>
+        <p>Select a clip in the timeline, then run the diagnostic to see exactly what the scripting layer can access.</p>
+        <button class="remove-btn" id="diagBtn" style="margin-top:10px;border-color:#7b5ea7;color:#c084fc;">&#x1F50D; Run Diagnostic</button>
+        <pre id="diagOut" style="margin-top:10px;font-size:9px;color:#8888a8;white-space:pre-wrap;line-height:1.5;display:none;"></pre>
+      </div>
+
+      <div class="about-card">
+        <h2>Inspired by</h2>
+        <p>Prism Lens FX physical lens filters &mdash; <em>prismlensfx.com</em><br/>
+        Built by Tourist Studios &mdash; touriststudios.com.au</p>
+      </div>
+    </div>
+
+  </div><!-- /.content -->
+
+  <!-- ── Footer status ───────────────────────────────────────────────────── -->
+  <footer>
+    <div id="status">Select clips in timeline, then click an effect.</div>
+  </footer>
+
+</div><!-- /#app -->
+
+<script src="lib/CSInterface.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
