@@ -1,9 +1,3 @@
-'use client'
-
-import { useState, useMemo } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import type { Metadata } from 'next'
 import { client, projectsQuery } from '@/lib/sanity'
 import styles from './page.module.css'
 
@@ -62,6 +56,12 @@ export default async function WorkPage() {
     </div>
   )
 }
+
+'use client'
+
+import { useState, useMemo } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 
 function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]; projectNumbers: Map<string, string> }) {
   const [search, setSearch] = useState('')
