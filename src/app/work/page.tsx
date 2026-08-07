@@ -1,5 +1,6 @@
 import { client, projectsQuery } from '@/lib/sanity'
 import styles from './page.module.css'
+import type { Metadata } from 'next'
 
 export const revalidate = 0
 
@@ -64,7 +65,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]; projectNumbers: Map<string, string> }) {
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState<string>('')
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [activeYear, setActiveYear] = useState<number | null>(null)
 
