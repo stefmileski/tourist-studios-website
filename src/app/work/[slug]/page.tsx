@@ -1,32 +1,37 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import Image from 'next/image'
-import { client, projectBySlugQuery } from '@/lib/sanity'
+import { client, projectBySlugQuery, projectsQuery } from '@/lib/sanity'
 import styles from './page.module.css'
-
-const DEMO: Record<string, any> = {
-  'somos': {
-    _id: '2', projectNumber: 87, title: 'The Creation of Somos',
-    client: 'SOMOS', year: 2024, categories: ['Campaign', 'Direction'],
-    description: 'A campaign film exploring identity, culture, and belonging for the SOMOS collective. Shot over two days across Sydney\'s inner west.',
-    services: ['Direction', 'Cinematography', 'Editing', 'Colour Grade'],
-    videoUrl: null, gallery: [], coverImage: null,
-  }
-}
 
 async function getProject(slug: string) {
   try {
     const data = await client.fetch(projectBySlugQuery, { slug })
     return data || null
   } catch {
-    return DEMO[slug] || null
+    return null
+  }
+}
+
+async function getProjectPosition(slug: string) {
+  try {
+    const allProjects = await client.fetch(projectsQuery)
+    const index = allProjects.findIndex((p: any) => p.slug === slug)
+    if (index === -1) return null
+    const total = allProjects.length
+    const digits = total.toString().length
+    const formattedNumber = index.toString().padStart(digits, '0')
+    return { position: formattedNumber, total }
+  } catch {
+    return null
   }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const p = await getProject(slug)
-  return { title: p?.title || 'Project' }
+  return { title: p?.title || 'Film' }
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -34,75 +39,112 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const project = await getProject(slug)
   if (!project) notFound()
 
+  const positionData = await getProjectPosition(slug)
+
+  // Extract video ID from URL for Vimeo player
+  const getVimeoPlayerId = (url: string | null) => {
+    if (!url) return null
+    const match = url.match(/vimeo\.com\/(\d+)/)
+    return match ? match[1] : null
+  }
+
+  const videoId = getVimeoPlayerId(project.vimeoUrl) || project.vimeoId
+
   return (
     <div className={styles.page}>
       {/* Header */}
       <header className={styles.header}>
-        <div className={styles.headerMeta}>
-          <span className={styles.projectNum}>{String(project.projectNumber).padStart(3, '0')}</span>
-          <div className={styles.cats}>
-            {(project.categories || []).map((c: string) => (
-              <span key={c} className={styles.cat}>{c}</span>
-            ))}
+        <div>
+          <div className={styles.headerTop}>
+            <div>
+              <Link href="/work" className={styles.backLink}>← Back to Work</Link>
+              {positionData && (
+                <span className={styles.projectNumber}>{positionData.position} / {positionData.total}</span>
+              )}
+            </div>
+            <span className={styles.categoryTag}>{project.category}</span>
           </div>
-        </div>
-        <h1 className={styles.title}>{project.title}</h1>
-        <div className={styles.headerDetails}>
-          <div className={styles.detail}>
-            <span className={styles.detailLabel}>Client</span>
-            <span>{project.client}</span>
-          </div>
-          <div className={styles.detail}>
-            <span className={styles.detailLabel}>Year</span>
-            <span>{project.year}</span>
-          </div>
-          <div className={styles.detail}>
-            <span className={styles.detailLabel}>Services</span>
-            <span>{(project.services || []).join(', ')}</span>
+          <h1 className={styles.title}>{project.title}</h1>
+          <div className={styles.headerDetails}>
+            {project.client && (
+              <div className={styles.detail}>
+                <span className={styles.detailLabel}>Client</span>
+                <span>{project.client}</span>
+              </div>
+            )}
+            <div className={styles.detail}>
+              <span className={styles.detailLabel}>Year</span>
+              <span>{project.year}</span>
+            </div>
+            {project.director && (
+              <div className={styles.detail}>
+                <span className={styles.detailLabel}>Director</span>
+                <span>{project.director}</span>
+              </div>
+            )}
+            {project.duration && (
+              <div className={styles.detail}>
+                <span className={styles.detailLabel}>Duration</span>
+                <span>{Math.floor(project.duration / 60)}:{String(project.duration % 60).padStart(2, '0')}</span>
+              </div>
+            )}
           </div>
         </div>
       </header>
 
-      {/* Hero image / video */}
-      <div className={styles.hero}>
-        {project.videoUrl ? (
-          <div className={styles.videoWrap}>
+      {/* Vimeo Player */}
+      {videoId && (
+        <div className={styles.videoSection}>
+          <div className={styles.videoContainer}>
             <iframe
-              src={project.videoUrl.replace('vimeo.com/', 'player.vimeo.com/video/')}
+              src={`https://player.vimeo.com/video/${videoId}`}
               frameBorder="0"
               allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen
               className={styles.video}
             />
           </div>
-        ) : project.coverImage ? (
-          <div className={styles.heroImg}>
-            <Image src={project.coverImage} alt={project.title} fill style={{ objectFit: 'cover' }} priority />
-          </div>
-        ) : (
-          <div className={styles.heroPlaceholder}>
-            <span>{String(project.projectNumber).padStart(3, '0')}</span>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Description */}
-      {project.description && (
+      {/* Description & Metadata */}
+      {(project.description || project.tags || project.credits) && (
         <section className={styles.body}>
-          <p className={styles.description}>{project.description}</p>
+          {project.description && (
+            <div className={styles.descriptionBlock}>
+              <h2 className={styles.sectionTitle}>About</h2>
+              <p className={styles.description}>{project.description}</p>
+            </div>
+          )}
+
+          {project.tags?.length > 0 && (
+            <div className={styles.tagsBlock}>
+              <h3 className={styles.sectionTitle}>Tags</h3>
+              <div className={styles.tags}>
+                {project.tags.map((tag: string) => (
+                  <span key={tag} className={styles.tag}>{tag}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {project.credits?.length > 0 && (
+            <div className={styles.creditsBlock}>
+              <h3 className={styles.sectionTitle}>Credits</h3>
+              <ul className={styles.credits}>
+                {project.credits.map((credit: string, i: number) => (
+                  <li key={i}>{credit}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
       )}
 
-      {/* Gallery */}
-      {project.gallery?.length > 0 && (
-        <section className={styles.gallery}>
-          {project.gallery.map((url: string, i: number) => (
-            <div key={i} className={styles.galleryImg}>
-              <Image src={url} alt={`${project.title} — ${i + 1}`} fill style={{ objectFit: 'cover' }} />
-            </div>
-          ))}
-        </section>
-      )}
+      {/* Navigation */}
+      <footer className={styles.footer}>
+        <Link href="/work" className={styles.backButton}>← Back to Portfolio</Link>
+      </footer>
     </div>
   )
 }

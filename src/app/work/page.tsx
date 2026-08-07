@@ -1,64 +1,183 @@
-import type { Metadata } from 'next'
+'use client'
+
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import type { Metadata } from 'next'
 import { client, projectsQuery } from '@/lib/sanity'
 import styles from './page.module.css'
 
 export const revalidate = 0
-export const metadata: Metadata = { title: 'Work' }
 
-const DEMO_PROJECTS = [
-  { _id: '1', projectNumber: 1, title: 'Young Academics — Brand Film', client: 'Young Academics', year: 2024, categories: ['Film', 'Photography'], slug: 'young-academics', coverImage: null },
-  { _id: '2', projectNumber: 2, title: 'SOMOS — Campaign', client: 'SOMOS', year: 2024, categories: ['Campaign', 'Direction'], slug: 'somos', coverImage: null },
-  { _id: '3', projectNumber: 3, title: 'Fluidform — Studio Series', client: 'Fluidform Pilates', year: 2023, categories: ['Film', 'Direction'], slug: 'fluidform', coverImage: null },
-  { _id: '4', projectNumber: 4, title: 'Real Estate — Bondi Portfolio', client: 'Undisclosed', year: 2023, categories: ['Real Estate', 'Photography'], slug: 'bondi-portfolio', coverImage: null },
-  { _id: '5', projectNumber: 5, title: 'Fashion Editorial', client: 'Tourist Fashion', year: 2023, categories: ['Fashion', 'Photography'], slug: 'fashion-editorial', coverImage: null },
-  { _id: '6', projectNumber: 6, title: 'Restaurant — Bondi Beach', client: 'Undisclosed', year: 2022, categories: ['Photography', 'Film'], slug: 'restaurant-bondi', coverImage: null },
+const CATEGORIES = [
+  'Commercial/Brand', 'Product', 'Fashion', 'Art/Cultural', 'Documentary',
+  'Narrative', 'Music/Art', 'Music/Branded', 'Comedy', 'Branded',
+  'Architecture/Design', 'Automotive/TVC', 'Event/Sport', 'Lifestyle/Editorial'
 ]
 
 async function getProjects() {
-  try { return await client.fetch(projectsQuery) } catch { return DEMO_PROJECTS }
+  try { return await client.fetch(projectsQuery) } catch { return [] }
+}
+
+interface WorkProject {
+  _id: string
+  title: string
+  year: number
+  category: string
+  client?: string
+  vimeoId: string
+  vimeoUrl: string
+  slug: string
+  heroImage?: string
+  tags?: string[]
+}
+
+// Helper to format project number (001, 002, etc.)
+function formatProjectNumber(index: number, total: number): string {
+  const digits = total.toString().length
+  return index.toString().padStart(digits, '0')
 }
 
 export default async function WorkPage() {
-  const projects = await getProjects()
+  const allProjects = await getProjects() as WorkProject[]
+
+  // Create a map of project ID to formatted number based on sorted position
+  const projectNumbers = new Map(
+    allProjects.map((p, index) => [
+      p._id,
+      formatProjectNumber(index, allProjects.length)
+    ])
+  )
 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
         <h1 className={styles.title}>Work</h1>
         <p className={styles.count}>
-          <span className={styles.mono}>{projects.length}</span> projects
+          <span className={styles.mono}>{allProjects.length}</span> films
         </p>
       </header>
 
+      <WorkGrid projects={allProjects} projectNumbers={projectNumbers} />
+    </div>
+  )
+}
+
+function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]; projectNumbers: Map<string, string> }) {
+  const [search, setSearch] = useState('')
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [activeYear, setActiveYear] = useState<number | null>(null)
+
+  // Get unique years from projects
+  const years = useMemo(() => {
+    return Array.from(new Set(projects.map(p => p.year))).sort((a, b) => b - a)
+  }, [projects])
+
+  // Filter projects
+  const filteredProjects = useMemo(() => {
+    return projects.filter(p => {
+      const matchesSearch = !search ||
+        p.title.toLowerCase().includes(search.toLowerCase()) ||
+        p.client?.toLowerCase().includes(search.toLowerCase())
+      const matchesCategory = !activeCategory || p.category === activeCategory
+      const matchesYear = !activeYear || p.year === activeYear
+      return matchesSearch && matchesCategory && matchesYear
+    })
+  }, [projects, search, activeCategory, activeYear])
+
+  return (
+    <>
+      <div className={styles.filters}>
+        <div className={styles.filterSection}>
+          <input
+            type="text"
+            placeholder="Search by title or client..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
+
+        <div className={styles.filterSection}>
+          <h3 className={styles.filterLabel}>Category</h3>
+          <div className={styles.filterOptions}>
+            <button
+              onClick={() => setActiveCategory(null)}
+              className={`${styles.filterOption} ${!activeCategory ? styles.active : ''}`}
+            >
+              All
+            </button>
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`${styles.filterOption} ${activeCategory === cat ? styles.active : ''}`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.filterSection}>
+          <h3 className={styles.filterLabel}>Year</h3>
+          <div className={styles.filterOptions}>
+            <button
+              onClick={() => setActiveYear(null)}
+              className={`${styles.filterOption} ${!activeYear ? styles.active : ''}`}
+            >
+              All Years
+            </button>
+            {years.map(year => (
+              <button
+                key={year}
+                onClick={() => setActiveYear(year)}
+                className={`${styles.filterOption} ${activeYear === year ? styles.active : ''}`}
+              >
+                {year}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.resultCount}>
+        Showing <span className={styles.mono}>{filteredProjects.length}</span> of <span className={styles.mono}>{projects.length}</span>
+      </div>
+
       <div className={styles.grid}>
-        {projects.map((p: any) => (
+        {filteredProjects.map((p) => (
           <Link key={p._id} href={`/work/${p.slug}`} className={styles.card}>
             <div className={styles.thumb}>
-              {p.coverImage ? (
-                <Image src={p.coverImage} alt={p.title} fill style={{ objectFit: 'cover' }} />
+              {p.heroImage ? (
+                <Image src={p.heroImage} alt={p.title} fill style={{ objectFit: 'cover' }} />
               ) : (
                 <div className={styles.thumbPlaceholder}>
-                  <span>{String(p.projectNumber).padStart(3, '0')}</span>
+                  <span>{p.year}</span>
                 </div>
               )}
+              <div className={styles.projectNumber}>
+                <span className={styles.mono}>{projectNumbers.get(p._id)}</span>
+              </div>
             </div>
             <div className={styles.cardMeta}>
-              <span className={styles.cardNum}>{String(p.projectNumber).padStart(3, '0')}</span>
               <div>
                 <p className={styles.cardTitle}>{p.title}</p>
-                <p className={styles.cardSub}>{p.client} — {p.year}</p>
+                <p className={styles.cardSub}>{p.client || 'Solo'} — {p.year}</p>
               </div>
-              <div className={styles.cardCats}>
-                {(p.categories || []).map((c: string) => (
-                  <span key={c} className={styles.cat}>{c}</span>
-                ))}
+              <div className={styles.cardCat}>
+                <span className={styles.cat}>{p.category}</span>
               </div>
             </div>
           </Link>
         ))}
       </div>
-    </div>
+
+      {filteredProjects.length === 0 && (
+        <div className={styles.empty}>
+          <p>No films match your filters.</p>
+        </div>
+      )}
+    </>
   )
 }
