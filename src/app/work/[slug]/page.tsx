@@ -48,7 +48,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     return match ? match[1] : null
   }
 
-  const videoId = getVimeoPlayerId(project.vimeoUrl) || project.vimeoId
+  const videoId = getVimeoPlayerId(project.videoUrl)
 
   return (
     <div className={styles.page}>
@@ -62,7 +62,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 <span className={styles.projectNumber}>{positionData.position} / {positionData.total}</span>
               )}
             </div>
-            <span className={styles.categoryTag}>{project.category}</span>
+            {project.categories && project.categories.length > 0 && (
+              <span className={styles.categoryTag}>{project.categories[0]}</span>
+            )}
           </div>
           <h1 className={styles.title}>{project.title}</h1>
           <div className={styles.headerDetails}>
@@ -76,18 +78,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <span className={styles.detailLabel}>Year</span>
               <span>{project.year}</span>
             </div>
-            {project.director && (
-              <div className={styles.detail}>
-                <span className={styles.detailLabel}>Director</span>
-                <span>{project.director}</span>
-              </div>
-            )}
-            {project.duration && (
-              <div className={styles.detail}>
-                <span className={styles.detailLabel}>Duration</span>
-                <span>{Math.floor(project.duration / 60)}:{String(project.duration % 60).padStart(2, '0')}</span>
-              </div>
-            )}
           </div>
         </div>
       </header>
@@ -108,7 +98,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       )}
 
       {/* Description & Metadata */}
-      {(project.description || project.tags || project.credits) && (
+      {(project.description || project.gallery || project.services) && (
         <section className={styles.body}>
           {project.description && (
             <div className={styles.descriptionBlock}>
@@ -117,25 +107,27 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </div>
           )}
 
-          {project.tags?.length > 0 && (
-            <div className={styles.tagsBlock}>
-              <h3 className={styles.sectionTitle}>Tags</h3>
-              <div className={styles.tags}>
-                {project.tags.map((tag: string) => (
-                  <span key={tag} className={styles.tag}>{tag}</span>
+          {project.services && project.services.length > 0 && (
+            <div className={styles.servicesBlock}>
+              <h3 className={styles.sectionTitle}>Services</h3>
+              <ul className={styles.services}>
+                {project.services.map((service: string, i: number) => (
+                  <li key={i}>{service}</li>
                 ))}
-              </div>
+              </ul>
             </div>
           )}
 
-          {project.credits?.length > 0 && (
-            <div className={styles.creditsBlock}>
-              <h3 className={styles.sectionTitle}>Credits</h3>
-              <ul className={styles.credits}>
-                {project.credits.map((credit: string, i: number) => (
-                  <li key={i}>{credit}</li>
+          {project.gallery && project.gallery.length > 0 && (
+            <div className={styles.galleryBlock}>
+              <h3 className={styles.sectionTitle}>Gallery</h3>
+              <div className={styles.gallery}>
+                {project.gallery.map((imageUrl: string, i: number) => (
+                  <div key={i} className={styles.galleryImage}>
+                    <Image src={imageUrl} alt={`${project.title} - image ${i + 1}`} fill style={{ objectFit: 'cover' }} />
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
         </section>
