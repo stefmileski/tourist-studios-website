@@ -59,6 +59,9 @@ export async function getVimeoMeta(url: string | null | undefined): Promise<Vime
           // Vimeo rejects some requests with a default runtime user agent
           'User-Agent': 'Mozilla/5.0 (compatible; TouristStudios/1.0; +https://touriststudios.com.au)',
           'Accept': 'application/json',
+          // These videos use domain-restricted embed privacy; Vimeo only
+          // includes thumbnail_url/duration when the referer is whitelisted
+          'Referer': 'https://www.touriststudios.com.au/',
         },
       }
     )
@@ -72,7 +75,7 @@ export async function getVimeoMeta(url: string | null | undefined): Promise<Vime
       duration: typeof data.duration === 'number' ? data.duration : null,
     }
     if (!meta.thumbnailUrl) {
-      console.warn(`vimeo oembed no thumbnail for ${parsed.id}:`, JSON.stringify(data).slice(0, 600))
+      console.warn(`vimeo oembed no thumbnail for ${parsed.id} (domain_status_code: ${data.domain_status_code})`)
     }
     metaCache.set(canonical, { meta, at: Date.now() })
     return meta
