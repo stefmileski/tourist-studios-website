@@ -6,6 +6,13 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
+  // Check if auth is enabled
+  const authEnabled = process.env.AUTH_ENABLED === 'true'
+  
+  if (!authEnabled) {
+    return NextResponse.next()
+  }
+
   const authHeader = request.headers.get('authorization')
   
   // Allow public API routes (e.g., for Sanity webhooks)
