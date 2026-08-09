@@ -21,21 +21,43 @@ export interface WorkProject {
 
 const PREVIEW_LOOP_SECONDS = 10
 
-// Hover preview that loops a short window: the src starts the video at
+// True on devices without hover (phones/tablets), where previews are driven
+// by scroll position instead of mouseover.
+function useIsTouch() {
+  const [isTouch, setIsTouch] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: none)')
+    setIsTouch(mq.matches)
+    const onChange = (e: MediaQueryListEvent) => setIsTouch(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  return isTouch
+}
+
+// Preview player that loops a short window: the src starts the video at
 // previewStart (#t=), and every ~10s we seek back there via the player's
-// postMessage API. loop=1 on the src remains as a whole-video fallback if
-// the message is ever ignored.
-function HoverPreview({ src, start }: { src: string; start: number }) {
+// postMessage API. loop=1 on the src remains a whole-video fallback if the
+// message is ever ignored. While `playing` is false the player is held
+// paused (retried each second — the player may not be ready for the first
+// message), which lets it mount early and buffer before scrolling into view.
+function PreviewFrame({ src, start, playing }: { src: string; start: number; playing: boolean }) {
   const ref = useRef<HTMLIFrameElement>(null)
   useEffect(() => {
-    const id = setInterval(() => {
+    const post = (method: string, value?: unknown) =>
       ref.current?.contentWindow?.postMessage(
-        JSON.stringify({ method: 'setCurrentTime', value: start }),
+        JSON.stringify(value === undefined ? { method } : { method, value }),
         'https://player.vimeo.com'
       )
-    }, PREVIEW_LOOP_SECONDS * 1000)
+    if (playing) {
+      post('play')
+      const id = setInterval(() => post('setCurrentTime', start), PREVIEW_LOOP_SECONDS * 1000)
+      return () => clearInterval(id)
+    }
+    post('pause')
+    const id = setInterval(() => post('pause'), 1000)
     return () => clearInterval(id)
-  }, [start])
+  }, [playing, start])
   return (
     <iframe
       ref={ref}
@@ -43,6 +65,7 @@ function HoverPreview({ src, start }: { src: string; start: number }) {
       frameBorder="0"
       allow="autoplay; picture-in-picture"
       className={styles.previewFrame}
+      style={{ opacity: playing ? 1 : 0, transition: 'opacity 0.3s' }}
       tabIndex={-1}
       aria-hidden="true"
     />
@@ -60,6 +83,13 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [activeYear, setActiveYear] = useState<number | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const isTouch = useIsTouch()
+  // Scroll-driven preview state for touch devices: cards near the viewport
+  // mount their player so it buffers ahead of arrival; cards actually in
+  // view play, and pause again once scrolled past.
+  const [nearIds, setNearIds] = useState<Set<string>>(new Set())
+  const [inViewIds, setInViewIds] = useState<Set<string>>(new Set())
+  const cardEls = useRef(new Map<string, HTMLElement>())
 
   // Only offer categories that actually have films
   const categories = useMemo(() => {
@@ -83,6 +113,33 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
       return matchesSearch && matchesCategory && matchesYear
     })
   }, [projects, search, activeCategory, activeYear])
+
+  useEffect(() => {
+    if (!isTouch) return
+    const idOf = (el: Element) => (el as HTMLElement).dataset.projectId as string
+    const track = (setter: React.Dispatch<React.SetStateAction<Set<string>>>) =>
+      (entries: IntersectionObserverEntry[]) =>
+        setter(prev => {
+          const next = new Set(prev)
+          for (const e of entries) {
+            if (e.isIntersecting) next.add(idOf(e.target))
+            else next.delete(idOf(e.target))
+          }
+          return next
+        })
+    // One viewport-height of lookahead in both directions buffers the next
+    // few previews before they scroll in
+    const near = new IntersectionObserver(track(setNearIds), { rootMargin: '100% 0px' })
+    const inView = new IntersectionObserver(track(setInViewIds), { threshold: 0.5 })
+    cardEls.current.forEach((el) => {
+      near.observe(el)
+      inView.observe(el)
+    })
+    return () => {
+      near.disconnect()
+      inView.disconnect()
+    }
+  }, [isTouch, filteredProjects])
 
   return (
     <>
@@ -149,8 +206,13 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
             key={p._id}
             href={`/work/${p.slug}`}
             className={styles.card}
-            onMouseEnter={() => setHoveredId(p._id)}
-            onMouseLeave={() => setHoveredId(prev => (prev === p._id ? null : prev))}
+            data-project-id={p._id}
+            ref={(el) => {
+              if (el) cardEls.current.set(p._id, el)
+              else cardEls.current.delete(p._id)
+            }}
+            onMouseEnter={isTouch ? undefined : () => setHoveredId(p._id)}
+            onMouseLeave={isTouch ? undefined : () => setHoveredId(prev => (prev === p._id ? null : prev))}
           >
             <div className={styles.thumb}>
               {p.heroImage ? (
@@ -163,9 +225,17 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
                   <span>{p.year}</span>
                 </div>
               )}
-              {hoveredId === p._id && p.previewSrc && (
-                <HoverPreview src={p.previewSrc} start={p.previewStart ?? 0} />
-              )}
+              {p.previewSrc && (isTouch
+                ? nearIds.has(p._id) && (
+                    <PreviewFrame
+                      src={p.previewSrc}
+                      start={p.previewStart ?? 0}
+                      playing={inViewIds.has(p._id)}
+                    />
+                  )
+                : hoveredId === p._id && (
+                    <PreviewFrame src={p.previewSrc} start={p.previewStart ?? 0} playing />
+                  ))}
               <div className={styles.cardNumOverlay}>
                 <span className={styles.mono}>{projectNumbers.get(p._id)}</span>
               </div>
