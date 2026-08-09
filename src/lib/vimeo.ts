@@ -71,6 +71,9 @@ export async function getVimeoMeta(url: string | null | undefined): Promise<Vime
       thumbnailUrl: typeof data.thumbnail_url === 'string' ? data.thumbnail_url : null,
       duration: typeof data.duration === 'number' ? data.duration : null,
     }
+    if (!meta.thumbnailUrl) {
+      console.warn(`vimeo oembed no thumbnail for ${parsed.id}:`, JSON.stringify(data).slice(0, 600))
+    }
     metaCache.set(canonical, { meta, at: Date.now() })
     return meta
   } catch (err) {
