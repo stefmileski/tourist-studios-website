@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { PreviewFrame, useScrollAutoplay } from '@/components/ScrollPreviews'
 import styles from './page.module.css'
 
 export interface WorkProject {
@@ -19,45 +20,6 @@ export interface WorkProject {
   previewStart?: number
 }
 
-const PREVIEW_LOOP_SECONDS = 10
-
-// Preview player that loops a short window: the src starts the video at
-// previewStart (#t=), and every ~10s we seek back there via the player's
-// postMessage API. loop=1 on the src remains a whole-video fallback if the
-// message is ever ignored. While `playing` is false the player is held
-// paused (retried each second — the player may not be ready for the first
-// message), which lets it mount early and buffer before scrolling into view.
-function PreviewFrame({ src, start, playing }: { src: string; start: number; playing: boolean }) {
-  const ref = useRef<HTMLIFrameElement>(null)
-  useEffect(() => {
-    const post = (method: string, value?: unknown) =>
-      ref.current?.contentWindow?.postMessage(
-        JSON.stringify(value === undefined ? { method } : { method, value }),
-        'https://player.vimeo.com'
-      )
-    if (playing) {
-      post('play')
-      const id = setInterval(() => post('setCurrentTime', start), PREVIEW_LOOP_SECONDS * 1000)
-      return () => clearInterval(id)
-    }
-    post('pause')
-    const id = setInterval(() => post('pause'), 1000)
-    return () => clearInterval(id)
-  }, [playing, start])
-  return (
-    <iframe
-      ref={ref}
-      src={src}
-      frameBorder="0"
-      allow="autoplay; picture-in-picture"
-      className={styles.previewFrame}
-      style={{ opacity: playing ? 1 : 0, transition: 'opacity 0.3s' }}
-      tabIndex={-1}
-      aria-hidden="true"
-    />
-  )
-}
-
 const CATEGORIES = [
   'Commercial/Brand', 'Product', 'Fashion', 'Art/Cultural', 'Documentary',
   'Narrative', 'Music/Art', 'Music/Branded', 'Comedy', 'Branded',
@@ -68,12 +30,6 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
   const [search, setSearch] = useState<string>('')
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [activeYear, setActiveYear] = useState<number | null>(null)
-  // Scroll-driven preview state: cards near the viewport mount their player
-  // so it buffers ahead of arrival; cards in (or nearly in) view play, and
-  // pause again once scrolled past.
-  const [nearIds, setNearIds] = useState<Set<string>>(new Set())
-  const [inViewIds, setInViewIds] = useState<Set<string>>(new Set())
-  const cardEls = useRef(new Map<string, HTMLElement>())
 
   // Only offer categories that actually have films
   const categories = useMemo(() => {
@@ -98,32 +54,7 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
     })
   }, [projects, search, activeCategory, activeYear])
 
-  useEffect(() => {
-    const idOf = (el: Element) => (el as HTMLElement).dataset.projectId as string
-    const track = (setter: React.Dispatch<React.SetStateAction<Set<string>>>) =>
-      (entries: IntersectionObserverEntry[]) =>
-        setter(prev => {
-          const next = new Set(prev)
-          for (const e of entries) {
-            if (e.isIntersecting) next.add(idOf(e.target))
-            else next.delete(idOf(e.target))
-          }
-          return next
-        })
-    // Three viewport-heights of lookahead buffers previews well before they
-    // scroll in, and playback starts most of a screen early so fast scrolling
-    // lands on cards that are already playing
-    const near = new IntersectionObserver(track(setNearIds), { rootMargin: '300% 0px' })
-    const inView = new IntersectionObserver(track(setInViewIds), { rootMargin: '75% 0px' })
-    cardEls.current.forEach((el) => {
-      near.observe(el)
-      inView.observe(el)
-    })
-    return () => {
-      near.disconnect()
-      inView.disconnect()
-    }
-  }, [filteredProjects])
+  const { register, nearIds, inViewIds } = useScrollAutoplay([filteredProjects])
 
   return (
     <>
@@ -190,11 +121,7 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
             key={p._id}
             href={`/work/${p.slug}`}
             className={styles.card}
-            data-project-id={p._id}
-            ref={(el) => {
-              if (el) cardEls.current.set(p._id, el)
-              else cardEls.current.delete(p._id)
-            }}
+            ref={register(p._id)}
           >
             <div className={styles.thumb}>
               {p.heroImage ? (
@@ -212,6 +139,7 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
                   src={p.previewSrc}
                   start={p.previewStart ?? 0}
                   playing={inViewIds.has(p._id)}
+                  className={styles.previewFrame}
                 />
               )}
               <div className={styles.cardNumOverlay}>

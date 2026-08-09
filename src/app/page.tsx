@@ -1,17 +1,8 @@
-import Link from 'next/link'
 import { client, projectsQuery, settingsQuery } from '@/lib/sanity'
-import styles from './page.module.css'
+import { getVimeoMeta, mapWithConcurrency, vimeoPlayerSrc } from '@/lib/vimeo'
+import { HomeShowcase, type ShowcaseProject } from './home-showcase'
 
 export const revalidate = 0
-
-// Fallback data for development / before Sanity is connected
-const DEMO_PROJECTS = [
-  { _id: '1', title: 'Young Academics — Brand Film', client: 'Young Academics', year: 2024, category: 'Film', slug: 'young-academics', featured: true },
-  { _id: '2', title: 'SOMOS — Campaign', client: 'SOMOS', year: 2024, category: 'Campaign', slug: 'somos', featured: true },
-  { _id: '3', title: 'Fluidform — Studio Series', client: 'Fluidform Pilates', year: 2023, category: 'Film', slug: 'fluidform', featured: false },
-  { _id: '4', title: 'Real Estate — Bondi Portfolio', client: 'Undisclosed', year: 2023, category: 'Real Estate', slug: 'bondi-portfolio', featured: false },
-  { _id: '5', title: 'Fashion Editorial', client: 'Tourist Fashion', year: 2023, category: 'Fashion', slug: 'fashion-editorial', featured: false },
-]
 
 const DEFAULTS = {
   heroHeadline: 'We make things\nworth watching.',
@@ -19,92 +10,61 @@ const DEFAULTS = {
   services: ['Commercial Film', 'Brand Photography', 'Real Estate Video', 'Creative Direction', 'Post Production'],
 }
 
+const SHOWCASE_COUNT = 12
+
 async function getProjects() {
-  try {
-    return await client.fetch(projectsQuery)
-  } catch {
-    return DEMO_PROJECTS
-  }
+  try { return await client.fetch(projectsQuery) } catch { return [] }
 }
 
 async function getSettings() {
-  try {
-    return await client.fetch(settingsQuery)
-  } catch {
-    return null
-  }
+  try { return await client.fetch(settingsQuery) } catch { return null }
 }
 
 export default async function HomePage() {
-  const [projects, settings] = await Promise.all([getProjects(), getSettings()])
+  const [allProjects, settings] = await Promise.all([getProjects(), getSettings()])
 
   const headline = settings?.heroHeadline || DEFAULTS.heroHeadline
-  const heroSub  = settings?.heroSub      || DEFAULTS.heroSub
   const services = settings?.services?.length ? settings.services : DEFAULTS.services
 
-  // Split headline on newline so <br /> is controlled by CMS content, not hardcoded
-  const headlineParts = headline.split('\n')
+  // The work leads: a featured film fills the hero, the next dozen make up
+  // the showcase mosaic. Featured projects float to the front.
+  const ordered = [
+    ...allProjects.filter((p: any) => p.featured),
+    ...allProjects.filter((p: any) => !p.featured),
+  ]
+  const picks = ordered.slice(0, 1 + SHOWCASE_COUNT)
+
+  const heroSource = picks[0]
+  const enriched: ShowcaseProject[] = await mapWithConcurrency(picks, 10, async (p: any) => {
+    const meta = await getVimeoMeta(p.videoUrl)
+    const previewStart = meta.duration ? Math.floor(meta.duration * 0.25) : 0
+    return {
+      _id: p._id,
+      title: p.title,
+      client: p.client ?? null,
+      year: p.year,
+      category: p.category ?? null,
+      slug: p.slug,
+      thumbnailUrl: meta.thumbnailUrl,
+      previewStart,
+      previewSrc: vimeoPlayerSrc(p.videoUrl, {
+        background: true,
+        startAt: previewStart,
+        // The hero fills the viewport; give it a sharper stream
+        quality: p === heroSource ? '720p' : '360p',
+      }),
+    }
+  })
+
+  const [hero, ...showcase] = enriched
 
   return (
-    <div className={styles.page}>
-      {/* Hero */}
-      <section className={styles.hero}>
-        <div className={styles.heroMeta}>
-          <span className={styles.heroTag}>Est. Sydney, Australia</span>
-          <span className={styles.heroTag}>Production · Direction · Photography</span>
-        </div>
-        <h1 className={styles.heroHeadline}>
-          {headlineParts.map((line: string, i: number) => (
-            <span key={i}>{line}{i < headlineParts.length - 1 && <br />}</span>
-          ))}
-        </h1>
-        <p className={styles.heroSub}>
-          {heroSub.split('\n').map((line: string, i: number) => (
-            <span key={i}>{line}{i < heroSub.split('\n').length - 1 && <br />}</span>
-          ))}
-        </p>
-      </section>
-
-      {/* Work Index — Ledger */}
-      <section className={styles.ledger}>
-        <div className={styles.ledgerHeader}>
-          <span className={styles.ledgerCol}>No.</span>
-          <span className={styles.ledgerCol}>Project</span>
-          <span className={styles.ledgerCol}>Client</span>
-          <span className={styles.ledgerCol}>Category</span>
-          <span className={styles.ledgerColRight}>Year</span>
-        </div>
-        <div className={styles.ledgerBody}>
-          {projects.map((p: any, i: number) => (
-            <Link key={p._id} href={`/work/${p.slug}`} className={styles.ledgerRow}>
-              <span className={styles.ledgerNum}>
-                {String(i + 1).padStart(3, '0')}
-              </span>
-              <span className={styles.ledgerTitle}>
-                {p.title}
-                <span className={styles.ledgerArrow}>→</span>
-              </span>
-              <span className={styles.ledgerClient}>{p.client || '—'}</span>
-              <span className={styles.ledgerCats}>
-                {p.category && <span className={styles.cat}>{p.category}</span>}
-              </span>
-              <span className={styles.ledgerYear}>{p.year}</span>
-            </Link>
-          ))}
-        </div>
-        <div className={styles.ledgerFooter}>
-          <Link href="/work" className={styles.viewAll}>
-            View full archive ({projects.length} projects) →
-          </Link>
-        </div>
-      </section>
-
-      {/* Services strip */}
-      <section className={styles.services}>
-        {services.map((s: string) => (
-          <span key={s} className={styles.serviceItem}>{s}</span>
-        ))}
-      </section>
-    </div>
+    <HomeShowcase
+      hero={hero ?? null}
+      projects={showcase}
+      headline={headline}
+      services={services}
+      total={allProjects.length}
+    />
   )
 }

@@ -1,13 +1,13 @@
 .page {
-  background: var(--cream);
-  color: var(--crimson);
+  background: var(--ink);
+  color: var(--cream);
   min-height: 100vh;
   padding-top: 80px;
 }
 
 .header {
   padding: 60px 40px 40px;
-  border-bottom: 1px solid var(--rule-dark);
+  border-bottom: 1px solid var(--rule);
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -95,8 +95,8 @@
 
 .input {
   background: transparent;
-  border: 1px solid rgba(62,3,6,0.2);
-  color: var(--crimson);
+  border: 1px solid rgba(236,229,214,0.2);
+  color: var(--cream);
   padding: 12px 16px;
   font-family: var(--font-body);
   font-size: 15px;
@@ -106,7 +106,7 @@
   -webkit-appearance: none;
   width: 100%;
 }
-.input:focus { border-color: var(--crimson); }
+.input:focus { border-color: var(--cream); }
 .input::placeholder { opacity: 0.3; }
 
 .textarea {
@@ -135,7 +135,7 @@
 .error {
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--crimson);
+  color: var(--cream);
   opacity: 0.6;
 }
 
