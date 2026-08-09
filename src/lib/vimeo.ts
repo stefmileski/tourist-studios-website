@@ -11,7 +11,7 @@ export function parseVimeoUrl(url: string | null | undefined): { id: string; has
 
 export function vimeoPlayerSrc(
   url: string | null | undefined,
-  opts?: { background?: boolean; startAt?: number }
+  opts?: { background?: boolean; startAt?: number; quality?: string }
 ): string | null {
   const parsed = parseVimeoUrl(url)
   if (!parsed) return null
@@ -24,6 +24,7 @@ export function vimeoPlayerSrc(
     params.set('muted', '1')
     params.set('loop', '1')
   }
+  if (opts?.quality) params.set('quality', opts.quality)
   const qs = params.toString()
   const frag = opts?.startAt && opts.startAt > 0 ? `#t=${Math.floor(opts.startAt)}s` : ''
   return `https://player.vimeo.com/video/${parsed.id}${qs ? `?${qs}` : ''}${frag}`

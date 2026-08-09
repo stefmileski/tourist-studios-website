@@ -21,17 +21,20 @@ function formatProjectNumber(index: number, total: number): string {
 export default async function WorkPage() {
   const allProjects = await getProjects() as WorkProject[]
 
-  // Enrich with Vimeo thumbnail + a muted hover preview starting mid-video,
-  // where the action is. oEmbed lookups are cached for a day; failures fall
-  // back to the year placeholder.
+  // Enrich with Vimeo thumbnail + a muted low-res hover preview starting a
+  // quarter of the way in, where the action is. oEmbed lookups are cached for
+  // a day; failures fall back to the year placeholder.
   const enriched: WorkProject[] = await mapWithConcurrency(allProjects, 10, async (p) => {
     const meta = await getVimeoMeta(p.videoUrl)
+    const previewStart = meta.duration ? Math.floor(meta.duration * 0.25) : 0
     return {
       ...p,
       thumbnailUrl: meta.thumbnailUrl,
+      previewStart,
       previewSrc: vimeoPlayerSrc(p.videoUrl, {
         background: true,
-        startAt: meta.duration ? meta.duration / 2 : 0,
+        startAt: previewStart,
+        quality: '360p',
       }),
     }
   })
