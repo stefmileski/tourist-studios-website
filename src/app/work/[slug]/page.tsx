@@ -21,7 +21,7 @@ async function getProjectPosition(slug: string) {
     if (index === -1) return null
     const total = allProjects.length
     const digits = total.toString().length
-    const formattedNumber = index.toString().padStart(digits, '0')
+    const formattedNumber = (index + 1).toString().padStart(digits, '0')
     return { position: formattedNumber, total }
   } catch {
     return null
@@ -41,14 +41,17 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   const positionData = await getProjectPosition(slug)
 
-  // Extract video ID from URL for Vimeo player
-  const getVimeoPlayerId = (url: string | null) => {
+  // Build the Vimeo player URL. Unlisted videos carry a privacy hash as a
+  // second path segment (vimeo.com/<id>/<hash>) that the player needs as ?h=
+  const getVimeoPlayerSrc = (url: string | null) => {
     if (!url) return null
-    const match = url.match(/vimeo\.com\/(\d+)/)
-    return match ? match[1] : null
+    const match = url.match(/vimeo\.com\/(\d+)(?:\/([a-zA-Z0-9]+))?/)
+    if (!match) return null
+    const [, id, hash] = match
+    return `https://player.vimeo.com/video/${id}${hash ? `?h=${hash}` : ''}`
   }
 
-  const videoId = getVimeoPlayerId(project.videoUrl)
+  const playerSrc = getVimeoPlayerSrc(project.videoUrl)
 
   return (
     <div className={styles.page}>
@@ -62,8 +65,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 <span className={styles.projectNumber}>{positionData.position} / {positionData.total}</span>
               )}
             </div>
-            {project.categories && project.categories.length > 0 && (
-              <span className={styles.categoryTag}>{project.categories[0]}</span>
+            {project.category && (
+              <span className={styles.categoryTag}>{project.category}</span>
             )}
           </div>
           <h1 className={styles.title}>{project.title}</h1>
@@ -83,11 +86,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       </header>
 
       {/* Vimeo Player */}
-      {videoId && (
+      {playerSrc && (
         <div className={styles.videoSection}>
           <div className={styles.videoContainer}>
             <iframe
-              src={`https://player.vimeo.com/video/${videoId}`}
+              src={playerSrc}
               frameBorder="0"
               allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen

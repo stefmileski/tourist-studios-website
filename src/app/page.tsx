@@ -6,11 +6,11 @@ export const revalidate = 0
 
 // Fallback data for development / before Sanity is connected
 const DEMO_PROJECTS = [
-  { _id: '1', projectNumber: '001', title: 'Young Academics — Brand Film', client: 'Young Academics', year: 2024, categories: ['Film', 'Photography'], slug: 'young-academics', featured: true },
-  { _id: '2', projectNumber: '002', title: 'SOMOS — Campaign', client: 'SOMOS', year: 2024, categories: ['Campaign', 'Direction'], slug: 'somos', featured: true },
-  { _id: '3', projectNumber: '003', title: 'Fluidform — Studio Series', client: 'Fluidform Pilates', year: 2023, categories: ['Film', 'Direction'], slug: 'fluidform', featured: false },
-  { _id: '4', projectNumber: '004', title: 'Real Estate — Bondi Portfolio', client: 'Undisclosed', year: 2023, categories: ['Real Estate', 'Photography'], slug: 'bondi-portfolio', featured: false },
-  { _id: '5', projectNumber: '005', title: 'Fashion Editorial', client: 'Tourist Fashion', year: 2023, categories: ['Fashion', 'Photography'], slug: 'fashion-editorial', featured: false },
+  { _id: '1', title: 'Young Academics — Brand Film', client: 'Young Academics', year: 2024, category: 'Film', slug: 'young-academics', featured: true },
+  { _id: '2', title: 'SOMOS — Campaign', client: 'SOMOS', year: 2024, category: 'Campaign', slug: 'somos', featured: true },
+  { _id: '3', title: 'Fluidform — Studio Series', client: 'Fluidform Pilates', year: 2023, category: 'Film', slug: 'fluidform', featured: false },
+  { _id: '4', title: 'Real Estate — Bondi Portfolio', client: 'Undisclosed', year: 2023, category: 'Real Estate', slug: 'bondi-portfolio', featured: false },
+  { _id: '5', title: 'Fashion Editorial', client: 'Tourist Fashion', year: 2023, category: 'Fashion', slug: 'fashion-editorial', featured: false },
 ]
 
 const DEFAULTS = {
@@ -75,20 +75,18 @@ export default async function HomePage() {
           <span className={styles.ledgerColRight}>Year</span>
         </div>
         <div className={styles.ledgerBody}>
-          {projects.map((p: any) => (
+          {projects.map((p: any, i: number) => (
             <Link key={p._id} href={`/work/${p.slug}`} className={styles.ledgerRow}>
               <span className={styles.ledgerNum}>
-                {String(p.projectNumber).padStart(3, '0')}
+                {String(i + 1).padStart(3, '0')}
               </span>
               <span className={styles.ledgerTitle}>
                 {p.title}
                 <span className={styles.ledgerArrow}>→</span>
               </span>
-              <span className={styles.ledgerClient}>{p.client}</span>
+              <span className={styles.ledgerClient}>{p.client || '—'}</span>
               <span className={styles.ledgerCats}>
-                {(p.categories || []).map((c: string) => (
-                  <span key={c} className={styles.cat}>{c}</span>
-                ))}
+                {p.category && <span className={styles.cat}>{p.category}</span>}
               </span>
               <span className={styles.ledgerYear}>{p.year}</span>
             </Link>

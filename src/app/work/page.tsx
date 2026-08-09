@@ -35,7 +35,7 @@ export default async function WorkPage() {
   const projectNumbers = new Map(
     allProjects.map((p, index) => [
       p._id,
-      formatProjectNumber(index, allProjects.length)
+      formatProjectNumber(index + 1, allProjects.length)
     ])
   )
 
