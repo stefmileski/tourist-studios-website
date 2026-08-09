@@ -18,7 +18,12 @@ export interface ShowcaseProject {
   heroSrc?: string | null
 }
 
-const HERO_ROTATE_SECONDS = 10
+// Hero rotation: every ROTATE seconds the next film slides in. It is picked
+// and mounted (buffering, hidden off-screen) PRELOAD seconds beforehand so
+// the slide reveals a stream that's already rolling.
+const HERO_ROTATE_MS = 15_000
+const HERO_PRELOAD_MS = 3_000
+const HERO_SLIDE_MS = 900
 
 function Thumb({
   p,
@@ -75,25 +80,44 @@ export function HomeShowcase({
     [hero, projects]
   )
   const [heroIdx, setHeroIdx] = useState(0)
+  const [nextIdx, setNextIdx] = useState<number | null>(null)
+  const [sliding, setSliding] = useState(false)
+
   useEffect(() => {
     if (heroPool.length < 2) return
-    const id = setInterval(() => {
-      setHeroIdx(prev => {
-        let next = prev
-        while (next === prev) next = Math.floor(Math.random() * heroPool.length)
-        return next
-      })
-    }, HERO_ROTATE_SECONDS * 1000)
-    return () => clearInterval(id)
-  }, [heroPool])
+    let pick: ReturnType<typeof setTimeout>
+    let slide: ReturnType<typeof setTimeout>
+    let settle: ReturnType<typeof setTimeout>
+    pick = setTimeout(() => {
+      let j = heroIdx
+      while (j === heroIdx) j = Math.floor(Math.random() * heroPool.length)
+      setNextIdx(j)
+      slide = setTimeout(() => setSliding(true), HERO_PRELOAD_MS)
+      settle = setTimeout(() => {
+        setHeroIdx(j)
+        setNextIdx(null)
+        setSliding(false)
+      }, HERO_PRELOAD_MS + HERO_SLIDE_MS)
+    }, HERO_ROTATE_MS - HERO_PRELOAD_MS)
+    return () => {
+      clearTimeout(pick)
+      clearTimeout(slide)
+      clearTimeout(settle)
+    }
+  }, [heroIdx, heroPool])
+
   const nowShowing = heroPool[heroIdx] ?? null
+  const upNext = nextIdx !== null ? heroPool[nextIdx] : null
 
   return (
     <div className={styles.page}>
       {/* Hero — full bleed, rotating through the selected works */}
       {nowShowing && (
         <section className={styles.hero} ref={register('hero')}>
-          <div key={nowShowing._id} className={`${styles.heroMedia} ${styles.heroFade}`}>
+          <div
+            key={nowShowing._id}
+            className={`${styles.heroMedia} ${sliding ? styles.heroSlideOut : ''}`}
+          >
             <Thumb
               p={nowShowing}
               src={nowShowing.heroSrc ?? nowShowing.previewSrc}
@@ -101,6 +125,19 @@ export function HomeShowcase({
               playing={inViewIds.has('hero')}
             />
           </div>
+          {upNext && (
+            <div
+              key={upNext._id}
+              className={`${styles.heroMedia} ${styles.heroNext} ${sliding ? styles.heroSlideIn : ''}`}
+            >
+              <Thumb
+                p={upNext}
+                src={upNext.heroSrc ?? upNext.previewSrc}
+                mounted
+                playing={inViewIds.has('hero')}
+              />
+            </div>
+          )}
           <div className={styles.heroScrim} />
           <div className={styles.heroContent}>
             <h1 className={styles.heroHeadline}>
