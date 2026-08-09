@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import styles from './page.module.css'
@@ -16,6 +16,37 @@ export interface WorkProject {
   heroImage?: string
   thumbnailUrl?: string | null
   previewSrc?: string | null
+  previewStart?: number
+}
+
+const PREVIEW_LOOP_SECONDS = 10
+
+// Hover preview that loops a short window: the src starts the video at
+// previewStart (#t=), and every ~10s we seek back there via the player's
+// postMessage API. loop=1 on the src remains as a whole-video fallback if
+// the message is ever ignored.
+function HoverPreview({ src, start }: { src: string; start: number }) {
+  const ref = useRef<HTMLIFrameElement>(null)
+  useEffect(() => {
+    const id = setInterval(() => {
+      ref.current?.contentWindow?.postMessage(
+        JSON.stringify({ method: 'setCurrentTime', value: start }),
+        'https://player.vimeo.com'
+      )
+    }, PREVIEW_LOOP_SECONDS * 1000)
+    return () => clearInterval(id)
+  }, [start])
+  return (
+    <iframe
+      ref={ref}
+      src={src}
+      frameBorder="0"
+      allow="autoplay; picture-in-picture"
+      className={styles.previewFrame}
+      tabIndex={-1}
+      aria-hidden="true"
+    />
+  )
 }
 
 const CATEGORIES = [
@@ -133,14 +164,7 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
                 </div>
               )}
               {hoveredId === p._id && p.previewSrc && (
-                <iframe
-                  src={p.previewSrc}
-                  frameBorder="0"
-                  allow="autoplay; picture-in-picture"
-                  className={styles.previewFrame}
-                  tabIndex={-1}
-                  aria-hidden="true"
-                />
+                <HoverPreview src={p.previewSrc} start={p.previewStart ?? 0} />
               )}
               <div className={styles.cardNumOverlay}>
                 <span className={styles.mono}>{projectNumbers.get(p._id)}</span>
