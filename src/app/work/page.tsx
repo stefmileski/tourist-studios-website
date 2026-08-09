@@ -1,5 +1,5 @@
 import { client, projectsQuery } from '@/lib/sanity'
-import { getVimeoMeta, vimeoPlayerSrc } from '@/lib/vimeo'
+import { getVimeoMeta, mapWithConcurrency, vimeoPlayerSrc } from '@/lib/vimeo'
 import styles from './page.module.css'
 import type { Metadata } from 'next'
 import { WorkGrid, type WorkProject } from './work-grid'
@@ -24,19 +24,17 @@ export default async function WorkPage() {
   // Enrich with Vimeo thumbnail + a muted hover preview starting mid-video,
   // where the action is. oEmbed lookups are cached for a day; failures fall
   // back to the year placeholder.
-  const enriched: WorkProject[] = await Promise.all(
-    allProjects.map(async (p) => {
-      const meta = await getVimeoMeta(p.videoUrl)
-      return {
-        ...p,
-        thumbnailUrl: meta.thumbnailUrl,
-        previewSrc: vimeoPlayerSrc(p.videoUrl, {
-          background: true,
-          startAt: meta.duration ? meta.duration / 2 : 0,
-        }),
-      }
-    })
-  )
+  const enriched: WorkProject[] = await mapWithConcurrency(allProjects, 10, async (p) => {
+    const meta = await getVimeoMeta(p.videoUrl)
+    return {
+      ...p,
+      thumbnailUrl: meta.thumbnailUrl,
+      previewSrc: vimeoPlayerSrc(p.videoUrl, {
+        background: true,
+        startAt: meta.duration ? meta.duration / 2 : 0,
+      }),
+    }
+  })
 
   const projectNumbers = new Map(
     enriched.map((p, index) => [
