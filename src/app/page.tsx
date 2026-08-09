@@ -34,10 +34,10 @@ export default async function HomePage() {
   ]
   const picks = ordered.slice(0, 1 + SHOWCASE_COUNT)
 
-  const heroSource = picks[0]
   const enriched: ShowcaseProject[] = await mapWithConcurrency(picks, 10, async (p: any) => {
     const meta = await getVimeoMeta(p.videoUrl)
     const previewStart = meta.duration ? Math.floor(meta.duration * 0.25) : 0
+    const base = { background: true, startAt: previewStart } as const
     return {
       _id: p._id,
       title: p.title,
@@ -47,12 +47,10 @@ export default async function HomePage() {
       slug: p.slug,
       thumbnailUrl: meta.thumbnailUrl,
       previewStart,
-      previewSrc: vimeoPlayerSrc(p.videoUrl, {
-        background: true,
-        startAt: previewStart,
-        // The hero fills the viewport; give it a sharper stream
-        quality: p === heroSource ? '720p' : '360p',
-      }),
+      previewSrc: vimeoPlayerSrc(p.videoUrl, { ...base, quality: '360p' }),
+      // Every project can take a turn in the full-bleed hero, which wants a
+      // sharper stream
+      heroSrc: vimeoPlayerSrc(p.videoUrl, { ...base, quality: '720p' }),
     }
   })
 
