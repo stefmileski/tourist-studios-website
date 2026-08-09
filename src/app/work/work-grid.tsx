@@ -21,20 +21,6 @@ export interface WorkProject {
 
 const PREVIEW_LOOP_SECONDS = 10
 
-// True on devices without hover (phones/tablets), where previews are driven
-// by scroll position instead of mouseover.
-function useIsTouch() {
-  const [isTouch, setIsTouch] = useState(false)
-  useEffect(() => {
-    const mq = window.matchMedia('(hover: none)')
-    setIsTouch(mq.matches)
-    const onChange = (e: MediaQueryListEvent) => setIsTouch(e.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
-  return isTouch
-}
-
 // Preview player that loops a short window: the src starts the video at
 // previewStart (#t=), and every ~10s we seek back there via the player's
 // postMessage API. loop=1 on the src remains a whole-video fallback if the
@@ -82,11 +68,9 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
   const [search, setSearch] = useState<string>('')
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [activeYear, setActiveYear] = useState<number | null>(null)
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const isTouch = useIsTouch()
-  // Scroll-driven preview state for touch devices: cards near the viewport
-  // mount their player so it buffers ahead of arrival; cards actually in
-  // view play, and pause again once scrolled past.
+  // Scroll-driven preview state: cards near the viewport mount their player
+  // so it buffers ahead of arrival; cards in (or nearly in) view play, and
+  // pause again once scrolled past.
   const [nearIds, setNearIds] = useState<Set<string>>(new Set())
   const [inViewIds, setInViewIds] = useState<Set<string>>(new Set())
   const cardEls = useRef(new Map<string, HTMLElement>())
@@ -115,7 +99,6 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
   }, [projects, search, activeCategory, activeYear])
 
   useEffect(() => {
-    if (!isTouch) return
     const idOf = (el: Element) => (el as HTMLElement).dataset.projectId as string
     const track = (setter: React.Dispatch<React.SetStateAction<Set<string>>>) =>
       (entries: IntersectionObserverEntry[]) =>
@@ -140,7 +123,7 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
       near.disconnect()
       inView.disconnect()
     }
-  }, [isTouch, filteredProjects])
+  }, [filteredProjects])
 
   return (
     <>
@@ -212,8 +195,6 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
               if (el) cardEls.current.set(p._id, el)
               else cardEls.current.delete(p._id)
             }}
-            onMouseEnter={isTouch ? undefined : () => setHoveredId(p._id)}
-            onMouseLeave={isTouch ? undefined : () => setHoveredId(prev => (prev === p._id ? null : prev))}
           >
             <div className={styles.thumb}>
               {p.heroImage ? (
@@ -226,17 +207,13 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
                   <span>{p.year}</span>
                 </div>
               )}
-              {p.previewSrc && (isTouch
-                ? nearIds.has(p._id) && (
-                    <PreviewFrame
-                      src={p.previewSrc}
-                      start={p.previewStart ?? 0}
-                      playing={inViewIds.has(p._id)}
-                    />
-                  )
-                : hoveredId === p._id && (
-                    <PreviewFrame src={p.previewSrc} start={p.previewStart ?? 0} playing />
-                  ))}
+              {p.previewSrc && nearIds.has(p._id) && (
+                <PreviewFrame
+                  src={p.previewSrc}
+                  start={p.previewStart ?? 0}
+                  playing={inViewIds.has(p._id)}
+                />
+              )}
               <div className={styles.cardNumOverlay}>
                 <span className={styles.mono}>{projectNumbers.get(p._id)}</span>
               </div>
