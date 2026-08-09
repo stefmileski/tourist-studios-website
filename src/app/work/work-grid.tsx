@@ -127,10 +127,11 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
           }
           return next
         })
-    // One viewport-height of lookahead in both directions buffers the next
-    // few previews before they scroll in
-    const near = new IntersectionObserver(track(setNearIds), { rootMargin: '100% 0px' })
-    const inView = new IntersectionObserver(track(setInViewIds), { threshold: 0.5 })
+    // Three viewport-heights of lookahead buffers previews well before they
+    // scroll in, and playback starts most of a screen early so fast scrolling
+    // lands on cards that are already playing
+    const near = new IntersectionObserver(track(setNearIds), { rootMargin: '300% 0px' })
+    const inView = new IntersectionObserver(track(setInViewIds), { rootMargin: '75% 0px' })
     cardEls.current.forEach((el) => {
       near.observe(el)
       inView.observe(el)
