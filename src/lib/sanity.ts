@@ -12,31 +12,41 @@ const builder = imageUrlBuilder(client)
 export const urlFor = (source: any) => builder.image(source)
 
 // Queries
-export const projectsQuery = `*[_type == "project"] | order(projectNumber desc) {
+export const projectsQuery = `*[_type == "project"] | order(year asc, title asc) {
   _id,
   title,
-  projectNumber,
-  client,
   year,
-  categories,
+  category,
+  client,
+  "videoUrl": videoUrl || vimeoUrl,
   "slug": slug.current,
-  "coverImage": coverImage.asset->url,
+  "heroImage": heroImage.asset->url,
+  "gallery": gallery[].asset->url,
+  services,
   featured
+}`
+
+// Total count of projects (for numbering)
+export const projectCountQuery = `count(*[_type == "project"])`
+
+// Query to get project position for numbering (oldest first)
+export const projectPositionQuery = `{
+  "position": count(*[_type == "project" && (year < $year or (year == $year && title < $title))]) + 1,
+  "total": count(*[_type == "project"])
 }`
 
 export const projectBySlugQuery = `*[_type == "project" && slug.current == $slug][0] {
   _id,
   title,
-  projectNumber,
-  client,
   year,
-  categories,
+  category,
+  client,
   description,
-  services,
+  "videoUrl": videoUrl || vimeoUrl,
   "slug": slug.current,
-  "coverImage": coverImage.asset->url,
+  "heroImage": heroImage.asset->url,
   "gallery": gallery[].asset->url,
-  videoUrl,
+  services,
   featured
 }`
 
