@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client, projectBySlugQuery, projectsQuery } from '@/lib/sanity'
+import { vimeoPlayerSrc } from '@/lib/vimeo'
 import styles from './page.module.css'
 
 async function getProject(slug: string) {
@@ -41,54 +42,40 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   const positionData = await getProjectPosition(slug)
 
-  // Build the Vimeo player URL. Unlisted videos carry a privacy hash as a
-  // second path segment (vimeo.com/<id>/<hash>) that the player needs as ?h=
-  const getVimeoPlayerSrc = (url: string | null) => {
-    if (!url) return null
-    const match = url.match(/vimeo\.com\/(\d+)(?:\/([a-zA-Z0-9]+))?/)
-    if (!match) return null
-    const [, id, hash] = match
-    return `https://player.vimeo.com/video/${id}${hash ? `?h=${hash}` : ''}`
-  }
-
-  const playerSrc = getVimeoPlayerSrc(project.videoUrl)
+  const playerSrc = vimeoPlayerSrc(project.videoUrl)
 
   return (
     <div className={styles.page}>
       {/* Header */}
       <header className={styles.header}>
-        <div>
-          <div className={styles.headerTop}>
-            <div>
-              <Link href="/work" className={styles.backLink}>← Back to Work</Link>
-              {positionData && (
-                <span className={styles.projectNumber}>{positionData.position} / {positionData.total}</span>
-              )}
-            </div>
-            {project.category && (
-              <span className={styles.categoryTag}>{project.category}</span>
-            )}
-          </div>
-          <h1 className={styles.title}>{project.title}</h1>
-          <div className={styles.headerDetails}>
-            {project.client && (
-              <div className={styles.detail}>
-                <span className={styles.detailLabel}>Client</span>
-                <span>{project.client}</span>
-              </div>
-            )}
+        <div className={styles.headerMeta}>
+          <Link href="/work" className={styles.backLink}>← Back to Work</Link>
+          {positionData && (
+            <span className={styles.projectNum}>{positionData.position} / {positionData.total}</span>
+          )}
+          {project.category && (
+            <span className={styles.headerCat}>{project.category}</span>
+          )}
+        </div>
+        <h1 className={styles.title}>{project.title}</h1>
+        <div className={styles.headerDetails}>
+          {project.client && (
             <div className={styles.detail}>
-              <span className={styles.detailLabel}>Year</span>
-              <span>{project.year}</span>
+              <span className={styles.detailLabel}>Client</span>
+              <span>{project.client}</span>
             </div>
+          )}
+          <div className={styles.detail}>
+            <span className={styles.detailLabel}>Year</span>
+            <span>{project.year}</span>
           </div>
         </div>
       </header>
 
       {/* Vimeo Player */}
       {playerSrc && (
-        <div className={styles.videoSection}>
-          <div className={styles.videoContainer}>
+        <div className={styles.hero}>
+          <div className={styles.videoWrap}>
             <iframe
               src={playerSrc}
               frameBorder="0"
@@ -137,8 +124,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       )}
 
       {/* Navigation */}
-      <footer className={styles.footer}>
-        <Link href="/work" className={styles.backButton}>← Back to Portfolio</Link>
+      <footer className={styles.footerNav}>
+        <Link href="/work" className={styles.backLink}>← Back to Portfolio</Link>
       </footer>
     </div>
   )

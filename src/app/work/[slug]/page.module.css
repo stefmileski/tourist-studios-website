@@ -19,6 +19,36 @@
   margin-bottom: 24px;
 }
 
+.backLink {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--crimson);
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.backLink:hover { opacity: 1; }
+
+.headerCat {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid rgba(62,3,6,0.2);
+  opacity: 0.6;
+}
+
+.footerNav {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+  border-top: 1px solid var(--rule-dark);
+}
+
 .projectNum {
   font-family: var(--font-mono);
   font-size: 11px;
