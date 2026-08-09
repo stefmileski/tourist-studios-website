@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { PreviewFrame, useScrollAutoplay } from '@/components/ScrollPreviews'
 import styles from './page.module.css'
@@ -14,19 +15,25 @@ export interface ShowcaseProject {
   thumbnailUrl: string | null
   previewStart: number
   previewSrc: string | null
+  heroSrc?: string | null
 }
+
+const HERO_ROTATE_SECONDS = 10
 
 function Thumb({
   p,
   playing,
   mounted,
   className,
+  src,
 }: {
   p: ShowcaseProject
   playing: boolean
   mounted: boolean
   className?: string
+  src?: string | null
 }) {
+  const playerSrc = src ?? p.previewSrc
   return (
     <div className={`${styles.media} ${className ?? ''}`}>
       {p.thumbnailUrl ? (
@@ -35,9 +42,9 @@ function Thumb({
       ) : (
         <div className={styles.mediaPlaceholder}><span>{p.year}</span></div>
       )}
-      {p.previewSrc && mounted && (
+      {playerSrc && mounted && (
         <PreviewFrame
-          src={p.previewSrc}
+          src={playerSrc}
           start={p.previewStart}
           playing={playing}
           className={styles.previewFrame}
@@ -62,17 +69,38 @@ export function HomeShowcase({
 }) {
   const { register, nearIds, inViewIds } = useScrollAutoplay([projects])
 
+  // The hero rotates randomly through the whole selected-works pool
+  const heroPool = useMemo(
+    () => (hero ? [hero, ...projects] : projects).filter(p => p.heroSrc || p.previewSrc),
+    [hero, projects]
+  )
+  const [heroIdx, setHeroIdx] = useState(0)
+  useEffect(() => {
+    if (heroPool.length < 2) return
+    const id = setInterval(() => {
+      setHeroIdx(prev => {
+        let next = prev
+        while (next === prev) next = Math.floor(Math.random() * heroPool.length)
+        return next
+      })
+    }, HERO_ROTATE_SECONDS * 1000)
+    return () => clearInterval(id)
+  }, [heroPool])
+  const nowShowing = heroPool[heroIdx] ?? null
+
   return (
     <div className={styles.page}>
-      {/* Hero — the newest featured film, full bleed */}
-      {hero && (
-        <section className={styles.hero} ref={register(hero._id)}>
-          <Thumb
-            p={hero}
-            mounted={nearIds.has(hero._id)}
-            playing={inViewIds.has(hero._id)}
-            className={styles.heroMedia}
-          />
+      {/* Hero — full bleed, rotating through the selected works */}
+      {nowShowing && (
+        <section className={styles.hero} ref={register('hero')}>
+          <div key={nowShowing._id} className={`${styles.heroMedia} ${styles.heroFade}`}>
+            <Thumb
+              p={nowShowing}
+              src={nowShowing.heroSrc ?? nowShowing.previewSrc}
+              mounted={nearIds.has('hero')}
+              playing={inViewIds.has('hero')}
+            />
+          </div>
           <div className={styles.heroScrim} />
           <div className={styles.heroContent}>
             <h1 className={styles.heroHeadline}>
@@ -81,11 +109,15 @@ export function HomeShowcase({
               ))}
             </h1>
           </div>
-          <Link href={`/work/${hero.slug}`} className={styles.heroCredit}>
+          <Link
+            key={`credit-${nowShowing._id}`}
+            href={`/work/${nowShowing.slug}`}
+            className={`${styles.heroCredit} ${styles.heroFadeText}`}
+          >
             <span className={styles.heroCreditLabel}>Now showing</span>
-            <span className={styles.heroCreditTitle}>{hero.title}</span>
+            <span className={styles.heroCreditTitle}>{nowShowing.title}</span>
             <span className={styles.heroCreditSub}>
-              {hero.client || '—'} — {hero.year} · Watch →
+              {nowShowing.client || '—'} — {nowShowing.year} · Watch →
             </span>
           </Link>
         </section>
