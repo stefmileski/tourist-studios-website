@@ -34,6 +34,9 @@ export const project = {
     { name: 'services', title: 'Services', type: 'array', of: [{ type: 'string' }],
       options: { layout: 'tags' } },
     { name: 'featured', title: 'Featured on Homepage', type: 'boolean', initialValue: false },
+    { name: 'homepageOrder', title: 'Homepage Order', type: 'number',
+      description: 'Position on the homepage (1 = first). Films with a number come before films without; ties fall back to newest year first.',
+      hidden: ({ document }: any) => !document?.featured },
   ],
   orderings: [
     { title: 'Year (Newest)', name: 'yearDesc', by: [{ field: 'year', direction: 'desc' }] },

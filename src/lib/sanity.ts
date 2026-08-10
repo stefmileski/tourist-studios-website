@@ -23,7 +23,8 @@ export const projectsQuery = `*[_type == "project"] | order(year asc, title asc)
   "heroImage": heroImage.asset->url,
   "gallery": gallery[].asset->url,
   services,
-  featured
+  featured,
+  homepageOrder
 }`
 
 // Total count of projects (for numbering)
