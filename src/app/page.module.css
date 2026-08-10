@@ -162,7 +162,7 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding: 28px 40px;
+  padding: 72px 40px 32px;
 }
 
 .sectionTag {
@@ -214,16 +214,18 @@
 }
 .tile:hover::after { border-color: var(--crimson); }
 
-/* Rhythm: one wide leader, two halves, three thirds — repeating each six */
-.tile:nth-child(6n + 1) {
-  grid-column: span 6;
-  aspect-ratio: 21/9;
-}
+/* Rhythm: two halves, three thirds, then one wide full-bleed — repeating
+   each six, so the grid opens with a split row rather than echoing the
+   full-width hero */
+.tile:nth-child(6n + 3),
 .tile:nth-child(6n + 4),
-.tile:nth-child(6n + 5),
-.tile:nth-child(6n + 0) {
+.tile:nth-child(6n + 5) {
   grid-column: span 2;
   aspect-ratio: 4/3;
+}
+.tile:nth-child(6n + 0) {
+  grid-column: span 6;
+  aspect-ratio: 21/9;
 }
 
 .tileScrim {
@@ -263,7 +265,7 @@
   color: var(--cream);
 }
 
-.tile:nth-child(6n + 1) .tileTitle { font-size: 26px; }
+.tile:nth-child(6n + 0) .tileTitle { font-size: 26px; }
 
 .tileSub {
   font-family: var(--font-mono);
@@ -323,10 +325,10 @@
 @media (max-width: 768px) {
   .heroContent { left: 20px; right: 20px; bottom: 110px; }
   .heroCredit { left: 20px; bottom: 28px; max-width: calc(100vw - 40px); }
-  .showcaseHeader { padding: 20px; }
+  .showcaseHeader { padding: 44px 20px 20px; }
   .mosaic { grid-template-columns: 1fr; }
   .tile,
-  .tile:nth-child(6n + 1),
+  .tile:nth-child(6n + 3),
   .tile:nth-child(6n + 4),
   .tile:nth-child(6n + 5),
   .tile:nth-child(6n + 0) {
