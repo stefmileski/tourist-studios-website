@@ -7,6 +7,7 @@ import Wordmark from './Wordmark'
 import styles from './Nav.module.css'
 
 const links = [
+  { href: '/',        label: 'Home' },
   { href: '/work',    label: 'Work' },
   { href: '/about',   label: 'About' },
   { href: '/contact', label: 'Contact' },
@@ -67,7 +68,7 @@ export default function Nav() {
             <li key={href}>
               <Link
                 href={href}
-                className={`${styles.drawerLink} ${pathname.startsWith(href) ? styles.active : ''}`}
+                className={`${styles.drawerLink} ${(href === '/' ? pathname === '/' : pathname.startsWith(href)) ? styles.active : ''}`}
                 tabIndex={open ? 0 : -1}
               >
                 <span className={styles.drawerNum}>{String(i + 1).padStart(2, '0')}</span>
