@@ -121,6 +121,14 @@
   border-top: 1px solid var(--rule);
 }
 
+/* Wider windows fit more columns */
+@media (min-width: 1440px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1980px) {
+  .grid { grid-template-columns: repeat(4, 1fr); }
+}
+
 .card {
   position: relative;
   background: var(--ink);
