@@ -81,8 +81,8 @@ export default function Nav() {
             Start a project →
           </Link>
           <div className={styles.drawerMeta}>
-            <a href="mailto:hello@touriststudios.com.au" tabIndex={open ? 0 : -1}>
-              hello@touriststudios.com.au
+            <a href="mailto:online@touriststudios.com.au" tabIndex={open ? 0 : -1}>
+              online@touriststudios.com.au
             </a>
             <span>Bondi, Sydney NSW</span>
           </div>
