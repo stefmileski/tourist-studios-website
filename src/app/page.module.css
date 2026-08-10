@@ -326,6 +326,12 @@
   .heroContent { left: 20px; right: 20px; bottom: 110px; }
   .heroCredit { left: 20px; bottom: 28px; max-width: calc(100vw - 40px); }
   .showcaseHeader { padding: 44px 20px 20px; }
+  .archiveCta { padding: 36px 20px; }
+  .services { padding: 24px 20px 4px; gap: 10px 20px; }
+}
+
+/* Only portrait phones stack the mosaic; landscape keeps the desktop rhythm */
+@media (max-width: 768px) and (orientation: portrait) {
   .mosaic { grid-template-columns: 1fr; }
   .tile,
   .tile:nth-child(6n + 3),
@@ -335,6 +341,4 @@
     grid-column: span 1;
     aspect-ratio: 16/9;
   }
-  .archiveCta { padding: 36px 20px; }
-  .services { padding: 24px 20px 4px; gap: 10px 20px; }
 }

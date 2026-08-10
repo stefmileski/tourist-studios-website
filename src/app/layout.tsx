@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import { client, settingsQuery, buildThemeCSS } from '@/lib/sanity'
@@ -32,6 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Nav />
         <main>{children}</main>
         <Footer settings={settings} />
+        <Analytics />
       </body>
     </html>
   )
