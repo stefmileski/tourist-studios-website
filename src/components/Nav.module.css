@@ -9,10 +9,9 @@
   justify-content: space-between;
   padding: 20px 40px;
   color: var(--cream);
-  background: linear-gradient(to bottom, rgba(14,12,10,0.72), rgba(14,12,10,0));
-  pointer-events: none;
+  background: var(--ink);
+  border-bottom: 1px solid var(--rule);
 }
-.nav > * { pointer-events: auto; }
 
 .logo {
   display: flex;
