@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
-  title: 'Private preview — Tourist Studios',
+  title: { absolute: 'Private preview — Tourist Studios' },
   robots: { index: false, follow: false },
 }
 
