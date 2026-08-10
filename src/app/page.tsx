@@ -5,8 +5,6 @@ import { HomeShowcase, type ShowcaseProject } from './home-showcase'
 export const revalidate = 0
 
 const DEFAULTS = {
-  heroHeadline: 'We make things\nworth watching.',
-  heroSub: 'Tourist Studios is a boutique production company.\nFilm, photography, and creative direction — Bondi to everywhere.',
   services: ['Commercial Film', 'Brand Photography', 'Real Estate Video', 'Creative Direction', 'Post Production'],
 }
 
@@ -23,7 +21,6 @@ async function getSettings() {
 export default async function HomePage() {
   const [allProjects, settings] = await Promise.all([getProjects(), getSettings()])
 
-  const headline = settings?.heroHeadline || DEFAULTS.heroHeadline
   const services = settings?.services?.length ? settings.services : DEFAULTS.services
 
   // The work leads: featured films come first — ordered by their Homepage
@@ -67,7 +64,6 @@ export default async function HomePage() {
     <HomeShowcase
       hero={hero ?? null}
       projects={showcase}
-      headline={headline}
       services={services}
       total={allProjects.length}
     />
