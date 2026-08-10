@@ -33,20 +33,44 @@
   font-family: var(--font-mono);
 }
 
-/* Filters */
+/* Filters — one bar, sticky just below the fixed nav while scrolling */
 .filters {
-  padding: 24px 40px;
+  position: sticky;
+  top: 84px;
+  z-index: 60;
+  padding: 16px 40px;
   border-bottom: 1px solid var(--rule);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  background: var(--ink);
 }
 
-.filterRow {
+.filterBar {
   display: flex;
-  align-items: baseline;
-  gap: 16px;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
+
+.filterSelect {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background-color: transparent;
+  border: 1px solid rgba(236,229,214,0.25);
+  border-radius: 0;
+  padding: 8px 30px 8px 12px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23ECE5D6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: border-color 0.2s;
+}
+.filterSelect:hover, .filterSelect:focus { border-color: var(--cream); }
+.filterSelect option { background: var(--ink); color: var(--cream); }
 
 .searchInput {
   font-family: var(--font-mono);
@@ -72,45 +96,6 @@
   letter-spacing: 0.06em;
   opacity: 0.45;
   white-space: nowrap;
-}
-
-.filterLabel {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0.4;
-  flex-shrink: 0;
-  width: 64px;
-}
-
-.filterOptions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.filterOption {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--cream);
-  background: transparent;
-  border: 1px solid rgba(236,229,214,0.2);
-  border-radius: 0;
-  padding: 4px 10px;
-  cursor: pointer;
-  opacity: 0.65;
-  transition: opacity 0.15s, background 0.15s, color 0.15s;
-}
-.filterOption:hover { opacity: 1; }
-
-.active {
-  background: var(--crimson);
-  color: var(--cream);
-  border-color: var(--crimson);
-  opacity: 1;
 }
 
 .grid {
@@ -267,10 +252,9 @@
 
 @media (max-width: 768px) {
   .header { padding: 40px 20px 24px; }
-  .filters { padding: 20px; }
-  .filterRow { flex-direction: column; align-items: stretch; gap: 8px; }
-  .filterLabel { width: auto; }
-  .searchInput { max-width: none; }
-  .resultCount { margin-left: 0; }
+  .filters { padding: 12px 20px; top: 76px; }
+  .searchInput { max-width: none; flex: 1 1 100%; }
+  .filterSelect { flex: 1; }
+  .resultCount { margin-left: 0; flex-basis: 100%; }
   .cardMeta { padding: 16px 20px; }
 }
