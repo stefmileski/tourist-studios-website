@@ -59,7 +59,7 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
   return (
     <>
       <div className={styles.filters}>
-        <div className={styles.filterRow}>
+        <div className={styles.filterBar}>
           <input
             type="text"
             placeholder="Search by title or client…"
@@ -67,51 +67,31 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
             onChange={(e) => setSearch(e.target.value)}
             className={styles.searchInput}
           />
+          <select
+            value={activeCategory ?? ''}
+            onChange={(e) => setActiveCategory(e.target.value || null)}
+            className={styles.filterSelect}
+            aria-label="Filter by category"
+          >
+            <option value="">All categories</option>
+            {categories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+          <select
+            value={activeYear ?? ''}
+            onChange={(e) => setActiveYear(e.target.value ? Number(e.target.value) : null)}
+            className={styles.filterSelect}
+            aria-label="Filter by year"
+          >
+            <option value="">All years</option>
+            {years.map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
           <span className={styles.resultCount}>
             Showing <span className={styles.mono}>{filteredProjects.length}</span> of <span className={styles.mono}>{projects.length}</span>
           </span>
-        </div>
-
-        <div className={styles.filterRow}>
-          <span className={styles.filterLabel}>Category</span>
-          <div className={styles.filterOptions}>
-            <button
-              onClick={() => setActiveCategory(null)}
-              className={`${styles.filterOption} ${!activeCategory ? styles.active : ''}`}
-            >
-              All
-            </button>
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-                className={`${styles.filterOption} ${activeCategory === cat ? styles.active : ''}`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.filterRow}>
-          <span className={styles.filterLabel}>Year</span>
-          <div className={styles.filterOptions}>
-            <button
-              onClick={() => setActiveYear(null)}
-              className={`${styles.filterOption} ${!activeYear ? styles.active : ''}`}
-            >
-              All
-            </button>
-            {years.map(year => (
-              <button
-                key={year}
-                onClick={() => setActiveYear(activeYear === year ? null : year)}
-                className={`${styles.filterOption} ${activeYear === year ? styles.active : ''}`}
-              >
-                {year}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
