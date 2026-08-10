@@ -51,14 +51,44 @@ export function PreviewFrame({
   )
 }
 
+// True when the visitor's connection can comfortably carry autoplay video.
+// Uses the Network Information API where available (Chrome/Android — where it
+// matters most); browsers without it default to previews on. Visitors with
+// Data Saver, 2g/3g, or sub-1.5Mbps links get thumbnails instead of streams.
+function useConnectionAllowsVideo() {
+  const [allowed, setAllowed] = useState(true)
+  useEffect(() => {
+    const conn = (navigator as any).connection
+    if (!conn) return
+    const check = () => {
+      const type: string = conn.effectiveType || ''
+      const slow =
+        conn.saveData === true ||
+        type === 'slow-2g' || type === '2g' || type === '3g' ||
+        (typeof conn.downlink === 'number' && conn.downlink > 0 && conn.downlink < 1.5)
+      setAllowed(!slow)
+    }
+    check()
+    conn.addEventListener?.('change', check)
+    return () => conn.removeEventListener?.('change', check)
+  }, [])
+  return allowed
+}
+
 // Scroll-driven autoplay state: elements registered by id are watched by two
-// IntersectionObservers — a wide one (three viewport-heights) that mounts
-// players early so they buffer ahead of the scroll, and a nearer one that
-// actually plays them, pausing again once scrolled well past.
-export function useScrollAutoplay(deps: unknown[] = []) {
+// IntersectionObservers — a wide one that mounts players early so they buffer
+// ahead of the scroll, and a nearer one that actually plays them, pausing
+// again once scrolled well past. On connections too slow for autoplay video,
+// no players mount at all and the poster thumbnails stand in.
+export function useScrollAutoplay(
+  deps: unknown[] = [],
+  opts?: { nearMargin?: string }
+) {
   const [nearIds, setNearIds] = useState<Set<string>>(new Set())
   const [inViewIds, setInViewIds] = useState<Set<string>>(new Set())
   const els = useRef(new Map<string, HTMLElement>())
+  const videoAllowed = useConnectionAllowsVideo()
+  const nearMargin = opts?.nearMargin ?? '300% 0px'
 
   const register = (id: string) => (el: HTMLElement | null) => {
     if (el) {
@@ -70,6 +100,11 @@ export function useScrollAutoplay(deps: unknown[] = []) {
   }
 
   useEffect(() => {
+    if (!videoAllowed) {
+      setNearIds(new Set())
+      setInViewIds(new Set())
+      return
+    }
     const idOf = (el: Element) => (el as HTMLElement).dataset.previewId as string
     const track = (setter: React.Dispatch<React.SetStateAction<Set<string>>>) =>
       (entries: IntersectionObserverEntry[]) =>
@@ -81,7 +116,7 @@ export function useScrollAutoplay(deps: unknown[] = []) {
           }
           return next
         })
-    const near = new IntersectionObserver(track(setNearIds), { rootMargin: '300% 0px' })
+    const near = new IntersectionObserver(track(setNearIds), { rootMargin: nearMargin })
     const inView = new IntersectionObserver(track(setInViewIds), { rootMargin: '75% 0px' })
     els.current.forEach((el) => {
       near.observe(el)
@@ -92,7 +127,7 @@ export function useScrollAutoplay(deps: unknown[] = []) {
       inView.disconnect()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps)
+  }, [videoAllowed, nearMargin, ...deps])
 
   return { register, nearIds, inViewIds }
 }

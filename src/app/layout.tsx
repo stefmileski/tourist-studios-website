@@ -1,11 +1,31 @@
 import type { Metadata } from 'next'
+import { Big_Shoulders, Geist, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import { client, settingsQuery, buildThemeCSS } from '@/lib/sanity'
 import '@/styles/globals.css'
 
-export const revalidate = 0
+// Self-hosted variable fonts via next/font: one file per family, no
+// render-blocking Google Fonts chain. (Google merged Big Shoulders Display
+// into the Big Shoulders variable family.)
+const fontDisplay = Big_Shoulders({
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap',
+})
+const fontBody = Geist({
+  subsets: ['latin'],
+  variable: '--font-body',
+  display: 'swap',
+})
+const fontMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+})
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: { default: 'Tourist Studios', template: '%s — Tourist Studios' },
@@ -24,7 +44,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const themeCSS = buildThemeCSS(settings)
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable}`}>
       <head>
         {/* Colour theme — overrides globals.css vars with values from Sanity */}
         <style dangerouslySetInnerHTML={{ __html: themeCSS }} />

@@ -70,7 +70,9 @@ export function HomeShowcase({
   services: string[]
   total: number
 }) {
-  const { register, nearIds, inViewIds } = useScrollAutoplay([projects])
+  // A tighter preload halo than the archive: the homepage mounts 13 players,
+  // so buffering 1.5 screens ahead keeps the initial load leaner
+  const { register, nearIds, inViewIds } = useScrollAutoplay([projects], { nearMargin: '150% 0px' })
 
   // The hero walks the selected-works pool in order, starting from a random
   // film, wrapping back to the top. Projects sharing the same video (data

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { client, settingsQuery } from '@/lib/sanity'
 import styles from './page.module.css'
 
-export const revalidate = 0
+export const revalidate = 60
 export const metadata: Metadata = { title: 'About' }
 
 const DEFAULTS = {
