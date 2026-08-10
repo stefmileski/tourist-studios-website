@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@400;500&display=swap');
-
 :root {
   --ink:       #0E0C0A;
   --cream:     #ECE5D6;
@@ -7,11 +5,6 @@
   --mid:       #6B6560;
   --rule:      rgba(236,229,214,0.12);
   --rule-dark: rgba(14,12,10,0.12);
-
-  --font-display: 'Big Shoulders Display', sans-serif;
-  --font-body:    'Geist', system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
-  --font-hand:    'Caveat', cursive;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

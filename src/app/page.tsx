@@ -2,7 +2,7 @@ import { client, projectsQuery, settingsQuery } from '@/lib/sanity'
 import { getVimeoMeta, mapWithConcurrency, vimeoPlayerSrc } from '@/lib/vimeo'
 import { HomeShowcase, type ShowcaseProject } from './home-showcase'
 
-export const revalidate = 0
+export const revalidate = 60
 
 const DEFAULTS = {
   services: ['Commercial Film', 'Brand Photography', 'Real Estate Video', 'Creative Direction', 'Post Production'],
