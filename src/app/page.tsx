@@ -26,11 +26,18 @@ export default async function HomePage() {
   const headline = settings?.heroHeadline || DEFAULTS.heroHeadline
   const services = settings?.services?.length ? settings.services : DEFAULTS.services
 
-  // The work leads: a featured film fills the hero, the next dozen make up
-  // the showcase mosaic. Featured projects float to the front.
+  // The work leads: featured films come first — ordered by their Homepage
+  // Order field when set, then newest year — topped up with the newest
+  // non-featured films.
+  const newestFirst = (a: any, b: any) => (b.year ?? 0) - (a.year ?? 0)
+  const byHomepageOrder = (a: any, b: any) => {
+    const ao = a.homepageOrder ?? Infinity
+    const bo = b.homepageOrder ?? Infinity
+    return ao !== bo ? ao - bo : newestFirst(a, b)
+  }
   const ordered = [
-    ...allProjects.filter((p: any) => p.featured),
-    ...allProjects.filter((p: any) => !p.featured),
+    ...allProjects.filter((p: any) => p.featured).sort(byHomepageOrder),
+    ...allProjects.filter((p: any) => !p.featured).sort(newestFirst),
   ]
   const picks = ordered.slice(0, 1 + SHOWCASE_COUNT)
 
