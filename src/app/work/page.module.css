@@ -115,18 +115,12 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* Fluid columns: the grid refits as the window resizes — roughly one
+     column per 420px, collapsing to one on narrow screens */
+  grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr));
   gap: 1px;
   background: var(--rule);
   border-top: 1px solid var(--rule);
-}
-
-/* Wider windows fit more columns */
-@media (min-width: 1440px) {
-  .grid { grid-template-columns: repeat(3, 1fr); }
-}
-@media (min-width: 1980px) {
-  .grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 .card {
@@ -272,6 +266,5 @@
   .filterLabel { width: auto; }
   .searchInput { max-width: none; }
   .resultCount { margin-left: 0; }
-  .grid { grid-template-columns: 1fr; }
   .cardMeta { padding: 16px 20px; }
 }
