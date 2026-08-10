@@ -74,23 +74,36 @@ export function HomeShowcase({
 }) {
   const { register, nearIds, inViewIds } = useScrollAutoplay([projects])
 
-  // The hero rotates randomly through the whole selected-works pool
-  const heroPool = useMemo(
-    () => (hero ? [hero, ...projects] : projects).filter(p => p.heroSrc || p.previewSrc),
-    [hero, projects]
-  )
+  // The hero walks the selected-works pool in order, starting from a random
+  // film, wrapping back to the top. Projects sharing the same video (data
+  // duplicates) appear once so no film gets extra turns.
+  const heroPool = useMemo(() => {
+    const all = (hero ? [hero, ...projects] : projects).filter(p => p.heroSrc || p.previewSrc)
+    const seen = new Set<string>()
+    return all.filter(p => {
+      const key = p.heroSrc ?? p.previewSrc ?? p._id
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+  }, [hero, projects])
+
   const [heroIdx, setHeroIdx] = useState(0)
   const [nextIdx, setNextIdx] = useState<number | null>(null)
   const [sliding, setSliding] = useState(false)
 
+  // Random starting point, chosen client-side after hydration
+  useEffect(() => {
+    if (heroPool.length > 1) setHeroIdx(Math.floor(Math.random() * heroPool.length))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   useEffect(() => {
     if (heroPool.length < 2) return
-    let pick: ReturnType<typeof setTimeout>
     let slide: ReturnType<typeof setTimeout>
     let settle: ReturnType<typeof setTimeout>
-    pick = setTimeout(() => {
-      let j = heroIdx
-      while (j === heroIdx) j = Math.floor(Math.random() * heroPool.length)
+    const pick = setTimeout(() => {
+      const j = (heroIdx + 1) % heroPool.length
       setNextIdx(j)
       slide = setTimeout(() => setSliding(true), HERO_PRELOAD_MS)
       settle = setTimeout(() => {

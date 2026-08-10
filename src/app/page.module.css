@@ -201,7 +201,15 @@
   overflow: hidden;
   display: block;
   background: #000;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  transition: outline-color 0.2s;
 }
+.tile:hover {
+  outline-color: var(--crimson);
+  z-index: 1;
+}
+.tile:hover .tileNum { color: var(--crimson); opacity: 1; }
 
 /* Rhythm: one wide leader, two halves, three thirds — repeating each six */
 .tile:nth-child(6n + 1) {

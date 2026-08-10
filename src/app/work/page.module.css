@@ -125,9 +125,15 @@
   background: var(--ink);
   display: flex;
   flex-direction: column;
-  transition: background 0.2s;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  transition: background 0.2s, outline-color 0.2s;
 }
-.card:hover { background: #181510; }
+.card:hover {
+  background: #181510;
+  outline-color: var(--crimson);
+  z-index: 1;
+}
 
 .thumb {
   aspect-ratio: 16/10;
