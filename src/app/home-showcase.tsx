@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import Wordmark from '@/components/Wordmark'
 import { PreviewFrame, useScrollAutoplay } from '@/components/ScrollPreviews'
 import styles from './page.module.css'
 
@@ -31,12 +32,14 @@ function Thumb({
   mounted,
   className,
   src,
+  onPlaying,
 }: {
   p: ShowcaseProject
   playing: boolean
   mounted: boolean
   className?: string
   src?: string | null
+  onPlaying?: () => void
 }) {
   const playerSrc = src ?? p.previewSrc
   return (
@@ -53,6 +56,7 @@ function Thumb({
           start={p.previewStart}
           playing={playing}
           className={styles.previewFrame}
+          onPlaying={onPlaying}
         />
       )}
     </div>
@@ -122,8 +126,38 @@ export function HomeShowcase({
   const nowShowing = heroPool[heroIdx] ?? null
   const upNext = nextIdx !== null ? heroPool[nextIdx] : null
 
+  // Preloader: hold a splash over the page until the hero stream reports
+  // playback, with a hard timeout so nobody is ever stuck. Repeat visits in
+  // the same tab skip it.
+  const [booted, setBooted] = useState(false)
+  const [loaderGone, setLoaderGone] = useState(false)
+  const markBooted = useCallback(() => setBooted(true), [])
+  useEffect(() => {
+    if (sessionStorage.getItem('ts-booted')) {
+      setBooted(true)
+      setLoaderGone(true)
+      return
+    }
+    const t = setTimeout(() => setBooted(true), 4000)
+    return () => clearTimeout(t)
+  }, [])
+  useEffect(() => {
+    if (!booted) return
+    sessionStorage.setItem('ts-booted', '1')
+    const t = setTimeout(() => setLoaderGone(true), 700)
+    return () => clearTimeout(t)
+  }, [booted])
+
   return (
     <div className={styles.page}>
+      {!loaderGone && (
+        <div className={`${styles.loader} ${booted ? styles.loaderDone : ''}`} aria-hidden="true">
+          <div className={styles.loaderMark}>
+            <Wordmark color="var(--crimson)" width={220} stacked={false} />
+          </div>
+          <span className={styles.loaderLabel}>Now loading</span>
+        </div>
+      )}
       {/* Hero — full bleed, rotating through the selected works */}
       {nowShowing && (
         <section className={styles.hero} ref={register('hero')}>
@@ -136,6 +170,7 @@ export function HomeShowcase({
               src={nowShowing.heroSrc ?? nowShowing.previewSrc}
               mounted={nearIds.has('hero')}
               playing={inViewIds.has('hero')}
+              onPlaying={markBooted}
             />
           </div>
           {upNext && (
