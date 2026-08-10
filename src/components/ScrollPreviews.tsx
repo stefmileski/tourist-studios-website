@@ -15,13 +15,50 @@ export function PreviewFrame({
   start,
   playing,
   className,
+  onPlaying,
 }: {
   src: string
   start: number
   playing: boolean
   className?: string
+  // Fires once, when the player reports actual playback (used by the
+  // homepage preloader to know the hero is rolling)
+  onPlaying?: () => void
 }) {
   const ref = useRef<HTMLIFrameElement>(null)
+
+  useEffect(() => {
+    if (!onPlaying) return
+    const iframe = ref.current
+    if (!iframe) return
+    let fired = false
+    let tries = 0
+    // The player ignores subscriptions until it's ready, so re-send a few times
+    const sub = setInterval(() => {
+      if (++tries > 20) { clearInterval(sub); return }
+      for (const ev of ['play', 'playing', 'timeupdate']) {
+        iframe.contentWindow?.postMessage(
+          JSON.stringify({ method: 'addEventListener', value: ev }),
+          'https://player.vimeo.com'
+        )
+      }
+    }, 400)
+    const onMsg = (e: MessageEvent) => {
+      if (e.source !== iframe.contentWindow || fired) return
+      let data: any = e.data
+      if (typeof data === 'string') { try { data = JSON.parse(data) } catch { return } }
+      if (data?.event === 'play' || data?.event === 'playing' || data?.event === 'timeupdate') {
+        fired = true
+        clearInterval(sub)
+        onPlaying()
+      }
+    }
+    window.addEventListener('message', onMsg)
+    return () => {
+      clearInterval(sub)
+      window.removeEventListener('message', onMsg)
+    }
+  }, [onPlaying])
   useEffect(() => {
     const post = (method: string, value?: unknown) =>
       ref.current?.contentWindow?.postMessage(
