@@ -123,6 +123,12 @@
   border-top: 1px solid var(--rule);
 }
 
+/* Landscape phones sit under the 420px-per-column threshold but have the
+   width for a pair — always show two columns there */
+@media (max-width: 1024px) and (orientation: landscape) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 .card {
   position: relative;
   background: var(--ink);
