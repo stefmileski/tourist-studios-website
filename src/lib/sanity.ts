@@ -12,7 +12,7 @@ const builder = imageUrlBuilder(client)
 export const urlFor = (source: any) => builder.image(source)
 
 // Queries
-export const projectsQuery = `*[_type == "project"] | order(year asc, title asc) {
+export const projectsQuery = `*[_type == "project"] | order(year desc, title asc) {
   _id,
   title,
   year,
