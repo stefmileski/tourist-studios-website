@@ -9,7 +9,6 @@ import styles from './Nav.module.css'
 const links = [
   { href: '/work',    label: 'Work' },
   { href: '/about',   label: 'About' },
-  { href: '/blog',    label: 'Journal' },
   { href: '/contact', label: 'Contact' },
 ]
 
