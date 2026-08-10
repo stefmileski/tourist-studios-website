@@ -41,26 +41,24 @@
   to { opacity: 1; }
 }
 
-/* Cover-crop the 16:9 player to the viewport */
-.heroMedia .previewFrame,
-.heroMedia iframe {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: max(100vw, 178svh);
-  height: max(100svh, 56.25vw);
-  transform: translate(-50%, -50%);
-  border: 0;
-  pointer-events: none;
-  background: #000;
-}
-
 .media {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
   background: #000;
+  container-type: size;
+}
+
+/* Cover-crop the 16:9 stream to whatever box it plays in (tile or hero),
+   so it fills with no letterbox */
+.media .previewFrame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100cqw, 177.78cqh);
+  height: max(100cqh, 56.25cqw);
+  transform: translate(-50%, -50%);
 }
 
 .mediaImg {
@@ -201,15 +199,20 @@
   overflow: hidden;
   display: block;
   background: #000;
-  outline: 2px solid transparent;
-  outline-offset: -2px;
-  transition: outline-color 0.2s;
-}
-.tile:hover {
-  outline-color: var(--crimson);
-  z-index: 1;
 }
 .tile:hover .tileNum { color: var(--crimson); opacity: 1; }
+
+/* Border overlay sits above the video iframe, which paints over outlines */
+.tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+  pointer-events: none;
+  z-index: 5;
+}
+.tile:hover::after { border-color: var(--crimson); }
 
 /* Rhythm: one wide leader, two halves, three thirds — repeating each six */
 .tile:nth-child(6n + 1) {

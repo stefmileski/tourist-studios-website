@@ -12,7 +12,7 @@ interface FooterProps {
 
 export default function Footer({ settings }: FooterProps) {
   const year     = new Date().getFullYear()
-  const email    = settings?.email        || 'hello@touriststudios.com.au'
+  const email    = settings?.email        || 'online@touriststudios.com.au'
   const instagram = settings?.instagram  || 'https://instagram.com/touriststudios'
   const vimeo    = settings?.vimeo        || 'https://vimeo.com/touriststudios'
   const location = settings?.contactLocation || 'Bondi, Sydney NSW'

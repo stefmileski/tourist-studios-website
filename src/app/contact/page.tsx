@@ -10,7 +10,7 @@ export default async function ContactPage() {
 
   return (
     <ContactForm
-      email={s?.email            || 'hello@touriststudios.com.au'}
+      email={s?.email            || 'online@touriststudios.com.au'}
       location={s?.contactLocation  || 'Bondi, Sydney NSW'}
       availability={s?.contactAvailability || 'Nationally & internationally'}
       sub={s?.contactSub         || 'We read every enquiry. Usually back within 24 hours.'}
