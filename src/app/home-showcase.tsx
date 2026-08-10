@@ -62,13 +62,11 @@ function Thumb({
 export function HomeShowcase({
   hero,
   projects,
-  headline,
   services,
   total,
 }: {
   hero: ShowcaseProject | null
   projects: ShowcaseProject[]
-  headline: string
   services: string[]
   total: number
 }) {
@@ -152,20 +150,13 @@ export function HomeShowcase({
             </div>
           )}
           <div className={styles.heroScrim} />
-          <div className={styles.heroContent}>
-            <h1 className={styles.heroHeadline}>
-              {headline.split('\n').map((line, i, arr) => (
-                <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
-              ))}
-            </h1>
-          </div>
           <Link
             key={`credit-${nowShowing._id}`}
             href={`/work/${nowShowing.slug}`}
             className={`${styles.heroCredit} ${styles.heroFadeText}`}
           >
             <span className={styles.heroCreditLabel}>Now showing</span>
-            <span className={styles.heroCreditTitle}>{nowShowing.title}</span>
+            <h1 className={styles.heroHeadline}>{nowShowing.title}</h1>
             <span className={styles.heroCreditSub}>
               {nowShowing.client || '—'} — {nowShowing.year} · Watch →
             </span>
