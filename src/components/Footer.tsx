@@ -37,7 +37,6 @@ export default function Footer({ settings }: FooterProps) {
           <span className={styles.label}>Navigate</span>
           <Link href="/work">Work</Link>
           <Link href="/about">About</Link>
-          <Link href="/blog">Journal</Link>
           <Link href="/contact">Contact</Link>
         </div>
       </div>
