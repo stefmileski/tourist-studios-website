@@ -60,8 +60,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <main>{children}</main>
         <Footer settings={settings} />
         <Analytics />
-        {/* Google Analytics activates once NEXT_PUBLIC_GA_ID is set in Vercel */}
-        {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
+        {/* Google Analytics — measurement IDs are public; the env var can
+            override without a code change */}
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID ?? 'G-98K2MBLFVL'} />
       </body>
     </html>
   )
