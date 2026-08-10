@@ -13,6 +13,12 @@
   border-bottom: 1px solid var(--rule);
 }
 
+/* Homepage only: let the hero film bleed behind the logo */
+.transparent {
+  background: linear-gradient(to bottom, rgba(14,12,10,0.72), rgba(14,12,10,0));
+  border-bottom-color: transparent;
+}
+
 .logo {
   display: flex;
   align-items: center;
