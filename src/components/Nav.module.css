@@ -19,6 +19,14 @@
   border-bottom: 0;
 }
 
+/* While the drawer is open, keep the bar (and its burger-as-X) above it so
+   the menu can always be closed */
+.nav.navOpen {
+  z-index: 140;
+  background: transparent;
+  border-bottom: 0;
+}
+
 .logo {
   display: flex;
   align-items: center;

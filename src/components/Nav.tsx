@@ -35,7 +35,7 @@ export default function Nav() {
 
   return (
     <>
-      <nav className={`${styles.nav} ${isHome ? styles.transparent : ''}`}>
+      <nav className={`${styles.nav} ${isHome ? styles.transparent : ''} ${open ? styles.navOpen : ''}`}>
         <Link href="/" className={styles.logo} aria-label="Tourist Studios — Home">
           <Wordmark color="var(--crimson)" width={120} stacked={false} />
         </Link>
