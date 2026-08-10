@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/third-parties": "^16.3.0",
     "@sanity/client": "^6.21.3",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^3.57.0",
