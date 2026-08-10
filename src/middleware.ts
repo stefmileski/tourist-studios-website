@@ -19,6 +19,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Gate everything except Next's static assets and the favicon
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  // Gate everything except Next's static assets, the favicon, and the
+  // crawler files (robots/sitemap), which search engines must always reach
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)'],
 }

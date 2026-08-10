@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Big_Shoulders, Geist, JetBrains_Mono } from 'next/font/google'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
@@ -31,6 +32,11 @@ export const metadata: Metadata = {
   title: { default: 'Tourist Studios', template: '%s — Tourist Studios' },
   description: 'Production company. Sydney, Australia. Film, photography, and creative direction.',
   metadataBase: new URL('https://touriststudios.com.au'),
+  // Google Search Console ownership token — set GOOGLE_SITE_VERIFICATION in
+  // Vercel and the meta tag renders on every page
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
   openGraph: {
     type: 'website',
     locale: 'en_AU',
@@ -54,6 +60,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <main>{children}</main>
         <Footer settings={settings} />
         <Analytics />
+        {/* Google Analytics activates once NEXT_PUBLIC_GA_ID is set in Vercel */}
+        {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
       </body>
     </html>
   )
