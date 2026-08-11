@@ -3,6 +3,7 @@ import { getVimeoMeta, mapWithConcurrency, vimeoPlayerSrc } from '@/lib/vimeo'
 import styles from './page.module.css'
 import type { Metadata } from 'next'
 import { WorkGrid, type WorkProject } from './work-grid'
+import Preloader from '@/components/Preloader'
 
 export const revalidate = 60
 
@@ -48,6 +49,7 @@ export default async function WorkPage() {
 
   return (
     <div className={styles.page}>
+      <Preloader />
       <header className={styles.header}>
         <h1 className={styles.title}>Work</h1>
         <p className={styles.count}>

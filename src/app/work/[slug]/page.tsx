@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Preloader from '@/components/Preloader'
 import Link from 'next/link'
 import Image from 'next/image'
 import { client, projectBySlugQuery, projectsQuery } from '@/lib/sanity'
@@ -46,6 +47,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className={styles.page}>
+      <Preloader maxMs={3000} />
       {/* Header */}
       <header className={styles.header}>
         <div className={styles.headerMeta}>
