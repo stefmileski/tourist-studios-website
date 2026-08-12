@@ -253,8 +253,11 @@
 @media (max-width: 768px) {
   .header { padding: 40px 20px 24px; }
   .filters { padding: 12px 20px; top: 76px; }
-  .searchInput { max-width: none; flex: 1 1 100%; }
-  .filterSelect { flex: 1; }
-  .resultCount { margin-left: 0; flex-basis: 100%; }
+  .filterBar { gap: 8px; flex-wrap: nowrap; }
+  /* Search and both dropdowns share one row: the input soaks up whatever
+     width the dropdowns leave, and everything can shrink rather than wrap */
+  .searchInput { max-width: none; flex: 1 1 0; min-width: 0; }
+  .filterSelect { flex: 0 1 auto; min-width: 0; padding: 8px 24px 8px 10px; background-position: right 8px center; }
+  .resultCount { display: none; }
   .cardMeta { padding: 16px 20px; }
 }

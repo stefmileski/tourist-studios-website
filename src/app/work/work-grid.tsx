@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { PreviewFrame, useScrollAutoplay } from '@/components/ScrollPreviews'
@@ -26,10 +26,50 @@ const CATEGORIES = [
   'Architecture/Design', 'Automotive/TVC', 'Event/Sport', 'Lifestyle/Editorial'
 ]
 
+// Filters survive navigating into a film and back (per-tab), so the archive
+// picks up exactly where the user left it
+const FILTER_STATE_KEY = 'ts-work-filters'
+
 export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]; projectNumbers: Map<string, string> }) {
   const [search, setSearch] = useState<string>('')
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [activeYear, setActiveYear] = useState<number | null>(null)
+  const [restored, setRestored] = useState(false)
+  const filtersRef = useRef<HTMLDivElement>(null)
+
+  // Restore saved filters after hydration (reading storage during render
+  // would mismatch the server HTML)
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(FILTER_STATE_KEY) ?? 'null')
+      if (saved) {
+        if (typeof saved.search === 'string') setSearch(saved.search)
+        if (typeof saved.category === 'string') setActiveCategory(saved.category)
+        if (typeof saved.year === 'number') setActiveYear(saved.year)
+      }
+    } catch { /* corrupted state — start clean */ }
+    setRestored(true)
+  }, [])
+
+  useEffect(() => {
+    if (!restored) return
+    try {
+      sessionStorage.setItem(
+        FILTER_STATE_KEY,
+        JSON.stringify({ search, category: activeCategory, year: activeYear })
+      )
+    } catch { /* storage unavailable — filters just won't persist */ }
+  }, [restored, search, activeCategory, activeYear])
+
+  // Changing any filter jumps back to the top of the grid so the new results
+  // are in view no matter how far down the page was scrolled
+  const snapToResults = () => {
+    const el = filtersRef.current
+    if (!el) return
+    const stickyTop = parseFloat(getComputedStyle(el).top) || 0
+    const pinned = el.getBoundingClientRect().top + window.scrollY - stickyTop
+    if (window.scrollY > pinned) window.scrollTo({ top: pinned })
+  }
 
   // Only offer categories that actually have films
   const categories = useMemo(() => {
@@ -58,18 +98,18 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
 
   return (
     <>
-      <div className={styles.filters}>
+      <div className={styles.filters} ref={filtersRef}>
         <div className={styles.filterBar}>
           <input
             type="text"
             placeholder="Search by title or client…"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => { setSearch(e.target.value); snapToResults() }}
             className={styles.searchInput}
           />
           <select
             value={activeCategory ?? ''}
-            onChange={(e) => setActiveCategory(e.target.value || null)}
+            onChange={(e) => { setActiveCategory(e.target.value || null); snapToResults() }}
             className={styles.filterSelect}
             aria-label="Filter by category"
           >
@@ -80,7 +120,7 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
           </select>
           <select
             value={activeYear ?? ''}
-            onChange={(e) => setActiveYear(e.target.value ? Number(e.target.value) : null)}
+            onChange={(e) => { setActiveYear(e.target.value ? Number(e.target.value) : null); snapToResults() }}
             className={styles.filterSelect}
             aria-label="Filter by year"
           >
