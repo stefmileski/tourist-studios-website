@@ -35,7 +35,18 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [activeYear, setActiveYear] = useState<number | null>(null)
   const [restored, setRestored] = useState(false)
+  const [compact, setCompact] = useState(false)
   const filtersRef = useRef<HTMLDivElement>(null)
+
+  // Mobile gets shorter dropdown labels so the one-row filter bar leaves
+  // room for the search field
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)')
+    const apply = () => setCompact(mq.matches)
+    apply()
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
+  }, [])
 
   // Restore saved filters after hydration (reading storage during render
   // would mismatch the server HTML)
@@ -113,7 +124,7 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
             className={styles.filterSelect}
             aria-label="Filter by category"
           >
-            <option value="">All categories</option>
+            <option value="">{compact ? 'Category' : 'All categories'}</option>
             {categories.map(cat => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
@@ -124,7 +135,7 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
             className={styles.filterSelect}
             aria-label="Filter by year"
           >
-            <option value="">All years</option>
+            <option value="">{compact ? 'Year' : 'All years'}</option>
             {years.map(year => (
               <option key={year} value={year}>{year}</option>
             ))}
