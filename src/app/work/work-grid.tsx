@@ -30,6 +30,12 @@ const CATEGORIES = [
 // picks up exactly where the user left it
 const FILTER_STATE_KEY = 'ts-work-filters'
 
+// The unfiltered archive renders in batches: 20 cards up front, 20 more each
+// time the reader nears the bottom, so a hard load doesn't fetch 77
+// thumbnails at once. Search and the filters always work over the full
+// catalogue and reveal every match immediately.
+const BATCH_SIZE = 20
+
 export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]; projectNumbers: Map<string, string> }) {
   const [search, setSearch] = useState<string>('')
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
@@ -105,7 +111,33 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
     })
   }, [projects, search, activeCategory, activeYear])
 
-  const { register, nearIds, inViewIds } = useScrollAutoplay([filteredProjects])
+  // Batched rendering only applies to the untouched archive; any active
+  // search/category/year shows all of its matches at once
+  const [visibleCount, setVisibleCount] = useState(BATCH_SIZE)
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  const filtersActive = Boolean(search || activeCategory || activeYear)
+  const visibleProjects = filtersActive
+    ? filteredProjects
+    : filteredProjects.slice(0, visibleCount)
+
+  useEffect(() => {
+    const el = sentinelRef.current
+    if (!el || filtersActive || visibleCount >= filteredProjects.length) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some(e => e.isIntersecting)) {
+          setVisibleCount(c => Math.min(c + BATCH_SIZE, filteredProjects.length))
+        }
+      },
+      // Fire well before the reader reaches the bottom so the next batch is
+      // already in place by the time they get there
+      { rootMargin: '1500px 0px' }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [filtersActive, visibleCount, filteredProjects.length])
+
+  const { register, nearIds, inViewIds } = useScrollAutoplay([visibleProjects])
 
   return (
     <>
@@ -147,7 +179,7 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
       </div>
 
       <div className={styles.grid}>
-        {filteredProjects.map((p) => (
+        {visibleProjects.map((p) => (
           <Link
             key={p._id}
             href={`/work/${p.slug}`}
@@ -189,6 +221,9 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
           </Link>
         ))}
       </div>
+
+      {/* Scroll sentinel — nearing it appends the next batch */}
+      <div ref={sentinelRef} aria-hidden="true" />
 
       {filteredProjects.length === 0 && (
         <div className={styles.empty}>
