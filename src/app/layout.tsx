@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Big_Shoulders, Geist, JetBrains_Mono } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
@@ -27,6 +27,15 @@ const fontMono = JetBrains_Mono({
 })
 
 export const revalidate = 60
+
+// Lock the page at 100% zoom on mobile — no pinch zoom, and no auto zoom-in
+// when a text field is focused (the layout is designed to fit as-is)
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
 
 export const metadata: Metadata = {
   title: { default: 'Tourist Studios', template: '%s — Tourist Studios' },
