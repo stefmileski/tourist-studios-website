@@ -312,7 +312,9 @@
   .services { padding: 24px 20px 4px; gap: 10px 20px; }
 }
 
-/* Only portrait phones stack the mosaic; landscape keeps the desktop rhythm */
+/* Only portrait phones stack the mosaic; landscape keeps the desktop rhythm.
+   Tiles go 4:5 portrait so each film fills the phone screen feed-style —
+   the cover-crop shows the centre of the 16:9 frame */
 @media (max-width: 768px) and (orientation: portrait) {
   .mosaic { grid-template-columns: 1fr; }
   .tile,
@@ -321,6 +323,6 @@
   .tile:nth-child(6n + 5),
   .tile:nth-child(6n + 0) {
     grid-column: span 1;
-    aspect-ratio: 16/9;
+    aspect-ratio: 4/5;
   }
 }
