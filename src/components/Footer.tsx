@@ -41,7 +41,18 @@ export default function Footer({ settings }: FooterProps) {
         </div>
       </div>
       <div className={styles.bottom}>
-        <span className={styles.copy}>© {year} Tourist Studios Pty Ltd</span>
+        <div className={styles.bottomLeft}>
+          <img
+            src="/logos/ts-stamp-seal-cream-256w.png"
+            srcSet="/logos/ts-stamp-seal-cream-256w.png 1x, /logos/ts-stamp-seal-cream-512w.png 2x"
+            alt=""
+            aria-hidden="true"
+            width={256}
+            height={256}
+            className={styles.seal}
+          />
+          <span className={styles.copy}>© {year} Tourist Studios Pty Ltd</span>
+        </div>
         <span className={styles.abn}>ABN — registered Sydney, Australia</span>
       </div>
     </footer>

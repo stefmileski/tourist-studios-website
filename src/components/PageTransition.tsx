@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import Wordmark from './Wordmark'
 import styles from './PageTransition.module.css'
 
 // Outgoing half of the page transition: tapping an internal link dissolves
@@ -59,7 +58,13 @@ export default function PageTransition() {
   return (
     <div className={`${styles.overlay} ${shown ? styles.overlayShown : ''}`} aria-hidden="true">
       <div className={styles.mark}>
-        <Wordmark color="var(--crimson)" width={220} stacked={false} />
+        <img
+          src="/logos/ts-wordmark-stacked-oxblood-512w.png"
+          srcSet="/logos/ts-wordmark-stacked-oxblood-512w.png 1x, /logos/ts-wordmark-stacked-oxblood-1024w.png 2x"
+          alt=""
+          width={1024}
+          height={395}
+        />
       </div>
       <span className={styles.label}>Now loading</span>
     </div>

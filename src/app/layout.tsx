@@ -42,6 +42,15 @@ export const metadata: Metadata = {
   title: { default: 'Tourist Studios', template: '%s — Tourist Studios' },
   description: 'Production company. Sydney, Australia. Film, photography, and creative direction.',
   metadataBase: new URL('https://touriststudios.com.au'),
+  icons: {
+    icon: [
+      { url: '/favicon/ts-monogram-oxblood-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: light)' },
+      { url: '/favicon/ts-monogram-oxblood-48.png', sizes: '48x48', type: 'image/png', media: '(prefers-color-scheme: light)' },
+      { url: '/favicon/ts-monogram-cream-32.png', sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: dark)' },
+      { url: '/favicon/ts-monogram-cream-48.png', sizes: '48x48', type: 'image/png', media: '(prefers-color-scheme: dark)' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
   // Google Search Console ownership token — set GOOGLE_SITE_VERIFICATION in
   // Vercel and the meta tag renders on every page
   verification: process.env.GOOGLE_SITE_VERIFICATION
