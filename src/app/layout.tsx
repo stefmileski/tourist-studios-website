@@ -4,6 +4,7 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/react'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
+import PageTransition from '@/components/PageTransition'
 import { client, settingsQuery, buildThemeCSS } from '@/lib/sanity'
 import '@/styles/globals.css'
 
@@ -65,6 +66,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <style dangerouslySetInnerHTML={{ __html: themeCSS }} />
       </head>
       <body>
+        <PageTransition />
         <Nav />
         <main>{children}</main>
         <Footer settings={settings} />
