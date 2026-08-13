@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { PreviewFrame, useScrollAutoplay } from '@/components/ScrollPreviews'
+import TSMark from '@/components/TSMark'
 import styles from './page.module.css'
 
 export interface WorkProject {
@@ -222,8 +223,13 @@ export function WorkGrid({ projects, projectNumbers }: { projects: WorkProject[]
         ))}
       </div>
 
-      {/* Scroll sentinel — nearing it appends the next batch */}
-      <div ref={sentinelRef} aria-hidden="true" />
+      {/* Scroll sentinel — nearing it appends the next batch. The pulsing TS
+          mark shows while more of the archive is still to come */}
+      {!filtersActive && visibleCount < filteredProjects.length && (
+        <div ref={sentinelRef} className={styles.loadMore} aria-hidden="true">
+          <TSMark width={44} />
+        </div>
+      )}
 
       {filteredProjects.length === 0 && (
         <div className={styles.empty}>

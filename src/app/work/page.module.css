@@ -252,6 +252,20 @@
   opacity: 0.5;
 }
 
+/* Pulsing TS mark under the grid while more of the archive loads on scroll */
+.loadMore {
+  display: flex;
+  justify-content: center;
+  padding: 36px 0 44px;
+}
+.loadMore svg {
+  animation: tsPulse 1.4s ease-in-out infinite;
+}
+@keyframes tsPulse {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.25; }
+}
+
 @media (max-width: 768px) {
   .header { padding: 40px 20px 24px; }
   .filters { padding: 12px 20px; top: 76px; }
