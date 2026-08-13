@@ -126,14 +126,14 @@ export function HomeShowcase({
   const nowShowing = heroPool[heroIdx] ?? null
   const upNext = nextIdx !== null ? heroPool[nextIdx] : null
 
-  // Splash until the hero stream reports playback (Preloader adds the hard
-  // timeout and once-per-session skip)
+  // Splash until the hero stream reports playback (Preloader adds the
+  // minimum hold and hard timeout)
   const [booted, setBooted] = useState(false)
   const markBooted = useCallback(() => setBooted(true), [])
 
   return (
     <div className={styles.page}>
-      <Preloader ready={booted} maxMs={4000} skipKey="ts-booted" />
+      <Preloader ready={booted} maxMs={4000} />
       {/* Hero — full bleed, rotating through the selected works */}
       {nowShowing && (
         <section className={styles.hero} ref={register('hero')}>
