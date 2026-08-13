@@ -43,13 +43,13 @@ export default function Footer({ settings }: FooterProps) {
       <div className={styles.bottom}>
         <div className={styles.bottomLeft}>
           <img
-            src="/logos/ts-stamp-seal-cream-256w.png"
-            srcSet="/logos/ts-stamp-seal-cream-256w.png 1x, /logos/ts-stamp-seal-cream-512w.png 2x"
+            src="/logos/ts-monogram-ts-cream-128w.png"
+            srcSet="/logos/ts-monogram-ts-cream-128w.png 1x, /logos/ts-monogram-ts-cream-256w.png 2x"
             alt=""
             aria-hidden="true"
             width={256}
-            height={256}
-            className={styles.seal}
+            height={156}
+            className={styles.mark}
           />
           <span className={styles.copy}>© {year} Tourist Studios Pty Ltd</span>
         </div>

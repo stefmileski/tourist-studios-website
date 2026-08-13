@@ -44,13 +44,13 @@
 .bottomLeft {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
-.seal {
-  width: 48px;
-  height: 48px;
-  opacity: 0.85;
+.mark {
+  height: 18px;
+  width: auto;
+  opacity: 0.7;
 }
 
 .copy, .abn {
@@ -63,5 +63,5 @@
 @media (max-width: 768px) {
   .footer { padding: 40px 20px 32px; margin-top: 80px; }
   .top { grid-template-columns: repeat(2, 1fr); gap: 32px; }
-  .bottom { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .bottom { flex-direction: column; gap: 12px; align-items: flex-start; }
 }
