@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { client, settingsQuery } from '@/lib/sanity'
+import Preloader from '@/components/Preloader'
 import styles from './page.module.css'
 
 export const revalidate = 60
@@ -22,6 +23,7 @@ export default async function AboutPage() {
 
   return (
     <div className={styles.page}>
+      <Preloader maxMs={2000} />
       <header className={styles.header}>
         <h1 className={styles.title}>About</h1>
       </header>

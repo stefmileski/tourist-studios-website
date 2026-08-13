@@ -26,9 +26,11 @@ export function PreviewFrame({
   onPlaying?: () => void
 }) {
   const ref = useRef<HTMLIFrameElement>(null)
+  // The iframe stays invisible (poster showing through) until the player
+  // reports real playback, so a buffering stream never paints a black box
+  const [started, setStarted] = useState(false)
 
   useEffect(() => {
-    if (!onPlaying) return
     const iframe = ref.current
     if (!iframe) return
     let fired = false
@@ -50,7 +52,8 @@ export function PreviewFrame({
       if (data?.event === 'play' || data?.event === 'playing' || data?.event === 'timeupdate') {
         fired = true
         clearInterval(sub)
-        onPlaying()
+        setStarted(true)
+        onPlaying?.()
       }
     }
     window.addEventListener('message', onMsg)
@@ -59,6 +62,14 @@ export function PreviewFrame({
       window.removeEventListener('message', onMsg)
     }
   }, [onPlaying])
+
+  // Safety valve: if the playback events never arrive, reveal shortly after
+  // play is requested rather than hiding a working stream forever
+  useEffect(() => {
+    if (!playing || started) return
+    const t = setTimeout(() => setStarted(true), 2500)
+    return () => clearTimeout(t)
+  }, [playing, started])
   useEffect(() => {
     const post = (method: string, value?: unknown) =>
       ref.current?.contentWindow?.postMessage(
@@ -81,7 +92,7 @@ export function PreviewFrame({
       frameBorder="0"
       allow="autoplay; picture-in-picture"
       className={className}
-      style={{ opacity: playing ? 1 : 0, transition: 'opacity 0.3s' }}
+      style={{ opacity: playing && started ? 1 : 0, transition: 'opacity 0.4s' }}
       tabIndex={-1}
       aria-hidden="true"
     />
