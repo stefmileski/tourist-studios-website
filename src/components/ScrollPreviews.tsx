@@ -38,18 +38,18 @@ export function PreviewFrame({
     // The player ignores subscriptions until it's ready, so re-send a few times
     const sub = setInterval(() => {
       if (++tries > 20) { clearInterval(sub); return }
-      for (const ev of ['play', 'playing', 'timeupdate']) {
-        iframe.contentWindow?.postMessage(
-          JSON.stringify({ method: 'addEventListener', value: ev }),
-          'https://player.vimeo.com'
-        )
-      }
+      iframe.contentWindow?.postMessage(
+        JSON.stringify({ method: 'addEventListener', value: 'timeupdate' }),
+        'https://player.vimeo.com'
+      )
     }, 400)
     const onMsg = (e: MessageEvent) => {
       if (e.source !== iframe.contentWindow || fired) return
       let data: any = e.data
       if (typeof data === 'string') { try { data = JSON.parse(data) } catch { return } }
-      if (data?.event === 'play' || data?.event === 'playing' || data?.event === 'timeupdate') {
+      // Only timeupdate proves frames are actually advancing — play/playing
+      // fire before the first frame paints, which is the black-flash window
+      if (data?.event === 'timeupdate') {
         fired = true
         clearInterval(sub)
         setStarted(true)
@@ -63,11 +63,11 @@ export function PreviewFrame({
     }
   }, [onPlaying])
 
-  // Safety valve: if the playback events never arrive, reveal shortly after
+  // Safety valve: if the playback events never arrive, reveal a while after
   // play is requested rather than hiding a working stream forever
   useEffect(() => {
     if (!playing || started) return
-    const t = setTimeout(() => setStarted(true), 2500)
+    const t = setTimeout(() => setStarted(true), 4000)
     return () => clearTimeout(t)
   }, [playing, started])
   useEffect(() => {
@@ -92,7 +92,7 @@ export function PreviewFrame({
       frameBorder="0"
       allow="autoplay; picture-in-picture"
       className={className}
-      style={{ opacity: playing && started ? 1 : 0, transition: 'opacity 0.4s' }}
+      style={{ opacity: playing && started ? 1 : 0, transition: 'opacity 0.7s ease' }}
       tabIndex={-1}
       aria-hidden="true"
     />
