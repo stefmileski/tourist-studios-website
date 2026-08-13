@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import Wordmark from './Wordmark'
 import styles from './Nav.module.css'
 
 const links = [
@@ -38,7 +37,14 @@ export default function Nav() {
     <>
       <nav className={`${styles.nav} ${isHome ? styles.transparent : ''} ${open ? styles.navOpen : ''}`}>
         <Link href="/" className={styles.logo} aria-label="Tourist Studios — Home">
-          <Wordmark color="var(--crimson)" width={120} stacked={false} />
+          <img
+            src="/logos/ts-wordmark-horizontal-oxblood-1024w.png"
+            srcSet="/logos/ts-wordmark-horizontal-oxblood-1024w.png 1x, /logos/ts-wordmark-horizontal-oxblood-2048w.png 2x"
+            alt="Tourist Studios"
+            width={1024}
+            height={86}
+            className={styles.wordmark}
+          />
         </Link>
         <button
           className={`${styles.burger} ${open ? styles.burgerOpen : ''}`}

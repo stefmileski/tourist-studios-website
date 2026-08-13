@@ -21,6 +21,10 @@
 .mark {
   animation: transitionPulse 1.6s ease-in-out infinite;
 }
+.mark img {
+  width: min(58vw, 220px);
+  height: auto;
+}
 
 .label {
   font-family: var(--font-mono);

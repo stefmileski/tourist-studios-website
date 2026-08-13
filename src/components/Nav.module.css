@@ -35,6 +35,11 @@
 }
 .logo:hover { opacity: 1; }
 
+.wordmark {
+  width: 160px;
+  height: auto;
+}
+
 /* Hamburger */
 .burger {
   position: relative;
@@ -167,4 +172,5 @@
 @media (max-width: 768px) {
   .nav { padding: 16px 20px; }
   .drawer { padding: 96px 24px 32px; }
+  .wordmark { width: 130px; }
 }

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Wordmark from './Wordmark'
 import styles from './Preloader.module.css'
 
 // Full-screen splash shown while a page gets its content in. It appears on
@@ -62,7 +61,13 @@ export default function Preloader({
       suppressHydrationWarning
     >
       <div className={styles.mark}>
-        <Wordmark color="var(--crimson)" width={220} stacked={false} />
+        <img
+          src="/logos/ts-wordmark-stacked-oxblood-512w.png"
+          srcSet="/logos/ts-wordmark-stacked-oxblood-512w.png 1x, /logos/ts-wordmark-stacked-oxblood-1024w.png 2x"
+          alt=""
+          width={1024}
+          height={395}
+        />
       </div>
       <span className={styles.label}>Now loading</span>
     </div>

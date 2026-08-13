@@ -41,6 +41,18 @@
   border-top: 1px solid var(--rule);
 }
 
+.bottomLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.seal {
+  width: 48px;
+  height: 48px;
+  opacity: 0.85;
+}
+
 .copy, .abn {
   font-family: var(--font-mono);
   font-size: 11px;
