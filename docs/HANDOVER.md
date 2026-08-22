@@ -108,14 +108,31 @@ pointed at this dataset — is told the content model is `film`, with fields lik
 That is precisely how the previous handover ended up describing `project` using
 `film`'s field list.
 
-**Action:** redeploy the schema so the artifact matches reality:
+**Fixed (Aug 2026).** The real `project` / `post` / `settings` model has been
+deployed, so `get_schema` now reports the content model the site actually uses.
+`film` could not be deleted — the deployed-schema record supports adding and
+overwriting types but not removing them — so it has been overwritten with a
+one-field stub whose description says plainly that it is dead and points at
+`project`. Its original field definitions survive in the read-only legacy record
+`_.schemas.default` if they are ever wanted.
 
-```bash
-npx sanity schema deploy
-```
+**Two caveats worth knowing before you touch this again:**
 
-Until that is done, do not trust `get_schema` on this dataset — read
-`sanity/schemas/` in this repo instead.
+1. **`npx sanity schema deploy` will not do what you expect here.** This workspace
+   is *MCP-managed*, and once it is, a schema deployed to the same workspace name
+   via the CLI is **not** selected by the default resolver — the MCP-managed record
+   keeps winning. So a CLI deploy can appear to succeed while `get_schema` goes on
+   reporting the older record. Use `list_workspace_schemas` to see every record and
+   read them by exact `schemaId` before concluding anything. (An earlier revision of
+   this document recommended the plain CLI deploy; that advice was incomplete.)
+
+2. **The deployed artifact is hand-transcribed, so it can drift from source.**
+   The deployment format takes literal declarations only, so the `validation` and
+   `hidden` functions in `sanity/schemas/project.ts` are *not* represented in it.
+   The artifact describes the shape of the content for tooling; it does not enforce
+   anything, and the Studio's real rules still live in the repo. **`sanity/schemas/`
+   remains the source of truth** — if you change a field there, the deployed artifact
+   does not follow automatically.
 
 ### `settings` — singleton, `_id: "settings"`
 
@@ -334,7 +351,7 @@ The genuinely open questions, now that the mechanism exists:
 
 | Item | Detail |
 | :-- | :-- |
-| **Redeploy the Sanity schema** | The deployed artifact contains only the dead `film` type. Any tool reading the deployed schema gets a wrong content model. `npx sanity schema deploy`. See §2. |
+| **~~Redeploy the Sanity schema~~ — done** | The real model is deployed; `film` is now a signposted stub. Note the workspace is MCP-managed, so CLI deploys are not picked up by default resolution, and the artifact is hand-transcribed and can drift from `sanity/schemas/`. See §2. |
 | **Finish the URL migration** | Copy `vimeoUrl` → `videoUrl` on the 93 films that lack it, then retire `vimeoUrl` / `vimeoId` from schema and queries. 93 live documents — take a backup first. |
 | **3 films not on the site** | *UTS: Sidney McMahon, Maggot* · *Rae Begley, On a Quiet Day* · *Shadow Catchers, Together In Art (AGNSW)*. Uploaded to Vimeo and correctly titled. `year` is required and none appear in the master list, so no entry was created. **Needs three years from the owner.** |
 | **Year conflicts** | Volvo XC60 (site 2017 / master 2023), Maia Financial (2019 / 2024), The Listeners – Yamaha (2019 / 2024), Train With Us – City2Surf (2017 / 2021). Gaps of 5–6 years; one source is badly wrong. Needs invoice evidence, not a guess. |
