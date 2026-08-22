@@ -209,9 +209,40 @@ Both halves were fixed together:
   anything that isn't a valid hex — so junk can never reach the stylesheet again.
 - **Content**: `settings.colorMid` set to `#6B6560` and published.
 
+**Verified live.** The production render now emits
+`--mid:#6B6560` as valid hex, sourced from Sanity (production also shows
+`--crimson:#900008`, the live accent, confirming the settings fetch is reaching the
+CMS). The muted hierarchy is back and readable.
+
 **Related, not changed:** `colorAccent` is `#900008`, which is **2.04 : 1** against
 `--ink`. That is fine for the hover states and rules it drives, but it would fail
 badly for anything text-sized. Worth a designer's eye before it gets reused.
+
+### ⚠️ Preview deployments do not reach Sanity — don't review content on them
+
+Comparing a PR preview against production on the same commit:
+
+| | Preview deploy | Production |
+| :-- | :-- | :-- |
+| `--crimson` | `#3E0306` (code default) | `#900008` (live Sanity value) |
+| Footer location | `Bondi, Sydney NSW` (hardcoded fallback) | `Sydney NSW` (from the CMS) |
+| Footer socials | `https://instagram.com/...` (fallback) | `http://instagram.com/...` (from the CMS) |
+
+Production reads Sanity correctly. **Preview deployments do not** — the settings fetch
+returns nothing and every page silently renders the code fallbacks, because
+`RootLayout` wraps the fetch in `.catch(() => null)` and each consumer has its own
+`||` default. Nothing errors; the site just quietly stops being CMS-driven.
+
+The likely cause is that `NEXT_PUBLIC_SANITY_PROJECT_ID` / `NEXT_PUBLIC_SANITY_DATASET`
+are not scoped to Vercel's **Preview** environment, so the client falls back to the
+`'your-project-id'` placeholder in `src/lib/sanity.ts` and every request 404s.
+*(Cause inferred from the rendered output — the environment-variable scoping itself was
+not inspected.)*
+
+**Why it matters:** a reviewer checking a PR preview for a content or theme change sees
+stale fallback values and concludes the change didn't work. Scope those two variables to
+Preview as well as Production, and consider logging the fetch failure instead of
+swallowing it — a silent `catch` is what let this sit unnoticed.
 
 ### Dead root `middleware.ts` removed
 
@@ -311,6 +342,8 @@ The genuinely open questions, now that the mechanism exists:
 | **SOL duplication** | The master list has three SOL entries (2016, 2017, and "SOL (with Meg Breaker)" 2017). The site has one, dated 2016. Either the master doc has phantom rows, or one or two SARAH & SEBASTIAN films are missing. |
 | **~12 unaccounted Vimeo videos** | The Vimeo account holds 139 videos; 122 are on the site. Worth an audit. *(Vimeo account not accessible from this repo — carried over from the previous handover, unverified.)* |
 | **`colorAccent` contrast** | `#900008` is 2.04:1 on `--ink`. Fine for hovers and rules, unusable for text. Flag before reuse. |
+| **Preview deploys ignore the CMS** | Preview renders code fallbacks instead of Sanity content; production is fine. Scope the `NEXT_PUBLIC_SANITY_*` vars to Preview. See §5 — previews are not trustworthy for reviewing content changes until this is fixed. |
+| **Insecure social URLs** | `settings.instagram` and `settings.vimeo` are stored as `http://`, not `https://`. They redirect, but should be corrected in the Studio. |
 | **README is stale** | Claims Next.js 14 (it's 15.5), describes a Formspree contact form (there is a `ContactForm.tsx` + `/api/unlock` route instead), and its "add a password-protected client area" section tells you to create `src/middleware.ts` — which already exists doing something else entirely. |
 | **Vercel framework preset** | Dashboard says `null`; `vercel.json` pins `nextjs` so builds are correct. Set the dashboard to match to remove the confusion. |
 | **Launch blocker** | **Unset `SITE_PASSWORD` in Vercel and redeploy.** That is the only gate. |
