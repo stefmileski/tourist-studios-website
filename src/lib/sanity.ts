@@ -71,9 +71,21 @@ export const settingsQuery = `*[_type == "settings"][0] {
   colorMid,
 }`
 
+// The colour fields in Settings are free-text strings, so a value can reach us
+// without its leading '#', in shorthand, or with stray whitespace. Interpolating
+// one of those straight into a custom property (`--mid:3E0400`) is invalid CSS
+// that fails silently at the use site, so every colour is normalised to a full
+// `#rrggbb` — or dropped for the brand default — before it is used.
+export function normalizeHex(value: string | null | undefined, fallback: string): string {
+  const h = (value ?? '').trim().replace(/^#/, '')
+  if (/^[0-9a-f]{3}$/i.test(h)) return `#${h[0]}${h[0]}${h[1]}${h[1]}${h[2]}${h[2]}`
+  if (/^[0-9a-f]{6}$/i.test(h)) return `#${h}`
+  return fallback
+}
+
 // Helper — hex colour → rgba string (used for derived rule/border colours)
 export function hexToRgba(hex: string, alpha: number): string {
-  const h = hex.replace('#', '')
+  const h = normalizeHex(hex, '#000000').slice(1)
   const r = parseInt(h.slice(0, 2), 16)
   const g = parseInt(h.slice(2, 4), 16)
   const b = parseInt(h.slice(4, 6), 16)
@@ -82,10 +94,10 @@ export function hexToRgba(hex: string, alpha: number): string {
 
 // Build a CSS :root block from settings, falling back to brand defaults
 export function buildThemeCSS(s: Record<string, string> | null): string {
-  const ink    = s?.colorInk    || '#0E0C0A'
-  const cream  = s?.colorCream  || '#ECE5D6'
-  const accent = s?.colorAccent || '#3E0306'
-  const mid    = s?.colorMid    || '#6B6560'
+  const ink    = normalizeHex(s?.colorInk,    '#0E0C0A')
+  const cream  = normalizeHex(s?.colorCream,  '#ECE5D6')
+  const accent = normalizeHex(s?.colorAccent, '#3E0306')
+  const mid    = normalizeHex(s?.colorMid,    '#6B6560')
   return `:root{--ink:${ink};--cream:${cream};--crimson:${accent};--mid:${mid};--rule:${hexToRgba(cream, 0.12)};--rule-dark:${hexToRgba(ink, 0.12)};}`
 }
 
